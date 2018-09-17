@@ -40,7 +40,6 @@ namespace Assets.Script.Geometry
 
         public Boolean ContainsPoint(Point pointX)
         {
-            Debug.Log(pointX);
             //Are in the same line
             Line auxLine = new Line(pointA, pointX);
             if (Mathf.Abs(auxLine.GetSlope() - this.line.GetSlope()) > Point.epsiloError &&

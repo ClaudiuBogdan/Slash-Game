@@ -616,7 +616,7 @@ PlayerSettings:
   cloudServicesEnabled:
     UNet: 1
   facebookSdkVersion: 7.9.4
-  apiCompatibilityLevel: 2
+  apiCompatibilityLevel: 3
   cloudProjectId: 21dda33a-ea3c-4bee-a3e0-e9c06aedbf9c
   projectName: SlashGame
   organizationId: claudiu93

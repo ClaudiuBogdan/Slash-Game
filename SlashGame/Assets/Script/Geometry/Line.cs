@@ -15,7 +15,7 @@ namespace Assets.Script.Geometry
             this.pointA = pointA;
             this.pointB = pointB;
             this.Slope = (pointB.y - pointA.y) / (pointB.x - pointA.x);
-            this.abscissaCutPoint = (pointB.x - pointA.x) * Slope + pointA.y;
+            this.abscissaCutPoint = ( - pointA.x) * Slope + pointA.y;
            
         }
 
@@ -40,12 +40,12 @@ namespace Assets.Script.Geometry
                 return new Point(lineB.pointA.x, this.GetYForX(lineB.pointA.x));
             }
             double[][] m = MatrixInverseProgram.MatrixCreate(2, 2);
-            m[0][0] = 1; m[0][1] = -this.GetSlope();
-            m[1][0] = 1; m[1][1] = -lineB.GetSlope();
+            m[0][0] = -this.GetSlope(); m[0][1] = 1;
+            m[1][0] = -lineB.GetSlope(); m[1][1] = 1;
 
             double[][] b = MatrixInverseProgram.MatrixCreate(2, 1);
-            m[0][0] = this.GetAbscissaCutPoint(); 
-            m[1][0] = lineB.GetAbscissaCutPoint();
+            b[0][0] = this.GetAbscissaCutPoint(); 
+            b[1][0] = lineB.GetAbscissaCutPoint();
 
             double[][] inversMatrix = MatrixInverseProgram.MatrixInverse(m);
             double[][] intersectionPoint = MatrixInverseProgram.MatrixProduct(inversMatrix, b);

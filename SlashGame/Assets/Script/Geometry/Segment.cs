@@ -23,7 +23,8 @@ namespace Assets.Script.Geometry
          */
         public Point Intersect(Segment segmentB)
         {
-            if (this.line.GetSlope() < Point.epsiloError && segmentB.line.GetSlope() < Point.epsiloError)
+            //Check if the two segments are vertical
+            if ((float.IsInfinity(this.line.GetSlope()) || this.line.GetSlope() > float.MaxValue) && (float.IsInfinity(this.line.GetSlope()) || segmentB.line.GetSlope() > float.MaxValue))
                 return null;
             if(Mathf.Abs(this.line.GetSlope() - segmentB.line.GetSlope()) < Point.epsiloError)
                 return null;

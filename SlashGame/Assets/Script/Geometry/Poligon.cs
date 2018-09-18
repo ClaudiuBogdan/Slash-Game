@@ -59,5 +59,10 @@ namespace Assets.Script.Geometry
 
             return intersectionPointsList;
         }
+
+        public ArrayList GetPoligonVertices()
+        {
+            return this.poligonVertices.Clone() as ArrayList;
+        }
     }
 }

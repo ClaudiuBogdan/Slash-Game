@@ -43,7 +43,7 @@ namespace Assets.Script
         private void TestSegmentIntersection()
         {
             {
-                /*//Test the segment intersection function:
+                //Test the segment intersection function:
                 Point pointA = new Point(-1, 0);
                 Point pointB = new Point(1, 0);
                 Point pointC = new Point(0, -1);
@@ -54,7 +54,7 @@ namespace Assets.Script
 
                 Point intersectionPoint = segmentA.Intersect(segmentB); //Expexted Point(0, 0)
 
-                Debug.Log("Expexted Point(0, 0), Point: " + intersectionPoint);*/
+                Debug.Log("Expexted Point(0, 0), Point: " + intersectionPoint);
             }
             //A(-8.02f, 3.16f) B(0.38, 4.14)
             //C(-5.3, -6) D(0.38, 4.14)

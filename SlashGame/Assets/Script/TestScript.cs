@@ -1,4 +1,5 @@
-﻿using Assets.Script.Geometry;
+﻿using System.Collections;
+using Assets.Script.Geometry;
 using UnityEngine;
 
 namespace Assets.Script
@@ -25,6 +26,17 @@ namespace Assets.Script
             Point E = new Point(-10, 3);
             Point F = new Point(10, 3);
 
+            ArrayList poligonVertices = new ArrayList();
+            poligonVertices.Add(A); poligonVertices.Add(B); poligonVertices.Add(C); poligonVertices.Add(D);
+            Poligon poligonFigure = new Poligon(poligonVertices);
+
+            Segment segmentA = new Segment(E, F);
+
+            ArrayList intersectionPoints = poligonFigure.GetSegmentIntersectionPoints(segmentA);
+            foreach (Point point in intersectionPoints)
+            {
+                Debug.Log("Intersection point: " + point);
+            }
 
         }
 

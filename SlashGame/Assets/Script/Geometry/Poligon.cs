@@ -48,7 +48,14 @@ namespace Assets.Script.Geometry
         public ArrayList GetSegmentIntersectionPoints(Segment segmentA)
         {
             ArrayList intersectionPointsList = new ArrayList();
-
+            foreach (Segment segmentSide in poligonSides)
+            {
+                Point intersectionPoint = segmentSide.Intersect(segmentA);
+                if (intersectionPoint != null)
+                {
+                    intersectionPointsList.Add(intersectionPoint);
+                }
+            }
 
             return intersectionPointsList;
         }

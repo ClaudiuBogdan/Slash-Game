@@ -7,6 +7,7 @@ namespace Assets.Script.Geometry
 {
     public class Segment
     {
+        private bool isCut;
         private Point pointA { get; }
         private Point pointB { get; }
         private Line line { get; }
@@ -54,6 +55,16 @@ namespace Assets.Script.Geometry
             if (Mathf.Abs(mod1 + mod2 - mod3) > Point.epsiloError)
                 return false;
             return true;
+        }
+
+        public void SetIsSegmentCut(bool isCut)
+        {
+            this.isCut = isCut;
+        }
+
+        public Boolean isSegmentCut()
+        {
+            return this.isCut;
         }
     }
 }

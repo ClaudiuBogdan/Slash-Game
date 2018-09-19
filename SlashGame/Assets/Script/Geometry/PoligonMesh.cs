@@ -8,11 +8,13 @@ public class PoligonMesh
 
     private Poligon poligon;
     private Mesh poligonMesh;
+    private Triangle triangle;
+    private LineRenderer poligonOutline;
 
     public PoligonMesh(Poligon poligon)
     {
         this.poligon = poligon;
-        SetPoligonMesh(poligon);
+        //SetPoligonMesh(poligon);
     }
 
     private void SetPoligonMesh(Poligon aPoligon)
@@ -29,5 +31,20 @@ public class PoligonMesh
          *      b.If not, end.
          */
 
+        int i = aPoligon.GetPoligonVertices().Count;
+        poligonOutline.positionCount = i;
+        poligonOutline.SetPositions(aPoligon.GetPoligonVerticesAsVectors()); //Generates the outline of the polygon with the given vertices
+        
+    }
+
+    public LineRenderer GetPoligonOutline()
+    {
+        return poligonOutline;
+    }
+
+    public void SetPoligonOutline(LineRenderer lineRenderer)
+    {
+        this.poligonOutline = lineRenderer;
+        SetPoligonMesh(this.poligon);
     }
 }

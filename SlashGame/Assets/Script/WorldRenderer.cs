@@ -14,7 +14,7 @@ public class WorldRenderer : MonoBehaviour
 
 	// Use this for initialization
 	void Start () {
-        MainCamera = GameObject.Find("MainCamera");
+        //MainCamera = GameObject.Find("MainCamera");
 
 		//Create a poligon
         ArrayList poligonVertices = new ArrayList(new Point[]{new Point(-1, 1), new Point(1, 1), new Point(1, -1), new Point(-1, -1), new Point(-1, 1) });
@@ -26,20 +26,42 @@ public class WorldRenderer : MonoBehaviour
 	
 	// Update is called once per frame
 	void Update () {
-	    if (isScreenTouched())
-	    {
-            Debug.Log(GetMousePositionToWorld());
-	    }
 	    if (isFingerTouchFirstTime())
 	    {
+	        Debug.Log("Touched first time");
+            fistSegmentPoint = new Point(GetMousePositionToWorld().x, GetMousePositionToWorld().y);
 
+	    }
+        if (isScreenTouched())
+	    {
+            //Debug.Log(GetMousePositionToWorld());
+	        Debug.Log("Touching...");
+            DetectFigureCut();
 	    }
 
 	    if (isFingerRelease())
 	    {
+	        Debug.Log("Release touch");
+            fistSegmentPoint = null;
+
 
 	    }
 	}
+
+    private void DetectFigureCut()
+    {
+        secondSegmentPoint = fistSegmentPoint;
+        fistSegmentPoint = new Point(GetMousePositionToWorld().x, GetMousePositionToWorld().y);
+        Segment segment = new Segment(fistSegmentPoint, secondSegmentPoint);
+        MainSlideFigure.CheckIntersection(segment);
+        if (MainSlideFigure.isReadyToCut())
+        {
+            MainSlideFigure.CutFigure();
+            Debug.Log("Figure cut");
+            /*MainSlideFigure.newPoligonA;
+            MainSlideFigure.newPoligonB;*/
+        }
+    }
 
     private bool isFingerTouchFirstTime()
     {
@@ -49,6 +71,12 @@ public class WorldRenderer : MonoBehaviour
     private bool isFingerRelease()
     {
         return Input.GetMouseButtonUp(0);
+        OnFingerRelease();
+    }
+
+    private void OnFingerRelease()
+    {
+        MainSlideFigure.resetCutPoints();
     }
 
     private bool isScreenTouched()

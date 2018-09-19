@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Assertions.Comparers;
 using UnityEngineInternal;
@@ -66,5 +67,6 @@ namespace Assets.Script.Geometry
         {
             return this.isCut;
         }
+
     }
 }

@@ -10,18 +10,22 @@ public class SlideFigure
     private Poligon figurePoligon;
     private ArrayList figureCutPoints;
 
+    public Poligon newPoligonA;
+    public Poligon newPoligonB;
+
     public SlideFigure(Poligon poligon)
     {
         this.figurePoligon = poligon;
+        this.figureCutPoints = new ArrayList();
     }
 
-    public void resetPoints()
+    public void resetCutPoints()
     {
         figureCutPoints.Clear();
         figurePoligon.ResetCutSegments();
     }
 
-    public Boolean isCut()
+    public Boolean isReadyToCut()
     {
         return figureCutPoints.Count == 2;
     }
@@ -32,6 +36,7 @@ public class SlideFigure
         if (intersectionPoints.Count > 0)
         {
             figureCutPoints.Add(intersectionPoints[0]);
+            Debug.Log("Intersection point: " + ((Point)intersectionPoints[0]));
         }
     }
 
@@ -74,8 +79,8 @@ public class SlideFigure
         }
         firstFigureVertices.Add(poligonVertices[0]);
 
-        Poligon newPoligonA = new Poligon(firstFigureVertices);
-        Poligon newPoligonB = new Poligon(secondFigureVertices);
+        newPoligonA = new Poligon(firstFigureVertices);
+        newPoligonB = new Poligon(secondFigureVertices);
 
     }
 

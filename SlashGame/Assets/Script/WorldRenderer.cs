@@ -20,7 +20,10 @@ public class WorldRenderer : MonoBehaviour
 
 		//Create a poligon
         ArrayList poligonVertices = new ArrayList(new Point[]{new Point(-1, 1), new Point(1, 1), new Point(1, -1), new Point(-1, -1) });
+	    //poligonVertices.Reverse();
+        
         Poligon poligon = new Poligon(poligonVertices);
+	    Debug.Log(poligon);
         MainSlideFigure = new SlideFigure(poligon);
 	    lineRendererObject = CreateSlideFigureObject(poligon);
 

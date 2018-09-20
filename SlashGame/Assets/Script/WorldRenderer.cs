@@ -8,8 +8,10 @@ public class WorldRenderer : MonoBehaviour
     public GameObject MainLineRendererPrefab;
     public GameObject MainCamera;
 
+    private GameObject lineRendererObject;
+
     private SlideFigure MainSlideFigure;
-    private Point fistSegmentPoint;
+    private Point firstSegmentPoint;
     private Point secondSegmentPoint;
 
 	// Use this for initialization
@@ -17,10 +19,10 @@ public class WorldRenderer : MonoBehaviour
         //MainCamera = GameObject.Find("MainCamera");
 
 		//Create a poligon
-        ArrayList poligonVertices = new ArrayList(new Point[]{new Point(-1, 1), new Point(1, 1), new Point(1, -1), new Point(-1, -1), new Point(-1, 1) });
+        ArrayList poligonVertices = new ArrayList(new Point[]{new Point(-1, 1), new Point(1, 1), new Point(1, -1), new Point(-1, -1) });
         Poligon poligon = new Poligon(poligonVertices);
         MainSlideFigure = new SlideFigure(poligon);
-	    MainLineRendererPrefab = CreateSlideFigureObject(poligon);
+	    lineRendererObject = CreateSlideFigureObject(poligon);
 
 	}
 	
@@ -28,31 +30,45 @@ public class WorldRenderer : MonoBehaviour
 	void Update () {
 	    if (isFingerTouchFirstTime())
 	    {
-	        Debug.Log("Touched first time");
-            fistSegmentPoint = new Point(GetMousePositionToWorld().x, GetMousePositionToWorld().y);
-
-	    }
+	        //Debug.Log("Touched first time");
+            firstSegmentPoint = new Point(GetMousePositionToWorld().x, GetMousePositionToWorld().y);
+	        
+        }
         if (isScreenTouched())
 	    {
             //Debug.Log(GetMousePositionToWorld());
-	        Debug.Log("Touching...");
+            //Debug.Log("Touching...");
             DetectFigureCut();
-	    }
+
+        }
 
 	    if (isFingerRelease())
 	    {
-	        Debug.Log("Release touch");
-            fistSegmentPoint = null;
-
+	        
+            // Debug.Log("Release touch");
+            //firstSegmentPoint = null;
+	        CleanSlideFigure();
 
 	    }
 	}
 
+    private void CleanSlideFigure()
+    {
+        MainSlideFigure.resetCutPoints();
+    }
+
     private void DetectFigureCut()
     {
-        secondSegmentPoint = fistSegmentPoint;
-        fistSegmentPoint = new Point(GetMousePositionToWorld().x, GetMousePositionToWorld().y);
-        Segment segment = new Segment(fistSegmentPoint, secondSegmentPoint);
+        Point detectedPoint = new Point(GetMousePositionToWorld().x, GetMousePositionToWorld().y);
+        if(detectedPoint.Equals(firstSegmentPoint))
+            return;
+        secondSegmentPoint = firstSegmentPoint;
+        firstSegmentPoint = detectedPoint;
+        /*Debug.Log("First point: " + firstSegmentPoint);
+        Debug.Log("Second point: " + secondSegmentPoint);*/
+        //Debug.Log("Poligon mesh: " + MainSlideFigure.GetPoligon());
+        
+        Segment segment = new Segment(firstSegmentPoint, secondSegmentPoint);
         MainSlideFigure.CheckIntersection(segment);
         if (MainSlideFigure.isReadyToCut())
         {
@@ -60,6 +76,10 @@ public class WorldRenderer : MonoBehaviour
             Debug.Log("Figure cut");
             /*MainSlideFigure.newPoligonA;
             MainSlideFigure.newPoligonB;*/
+            GameObject.Destroy(lineRendererObject);
+            lineRendererObject = CreateSlideFigureObject(MainSlideFigure.newPoligonA);
+            CreateSlideFigureObject(MainSlideFigure.newPoligonB).GetComponent<Rigidbody>().useGravity = true;
+            CleanSlideFigure();
         }
     }
 
@@ -71,12 +91,6 @@ public class WorldRenderer : MonoBehaviour
     private bool isFingerRelease()
     {
         return Input.GetMouseButtonUp(0);
-        OnFingerRelease();
-    }
-
-    private void OnFingerRelease()
-    {
-        MainSlideFigure.resetCutPoints();
     }
 
     private bool isScreenTouched()

@@ -36,7 +36,7 @@ public class SlideFigure
         if (intersectionPoints.Count > 0)
         {
             figureCutPoints.Add(intersectionPoints[0]);
-            Debug.Log("Intersection point: " + ((Point)intersectionPoints[0]));
+            //Debug.Log("Intersection point: " + ((Point)intersectionPoints[0]));
         }
     }
 
@@ -59,7 +59,7 @@ public class SlideFigure
                     ? figureCutPoints[0] as Point
                     : figureCutPoints[1] as Point;
                 int lastPoligonSegmentsIndex = poligonVertices.Count - 1;
-                
+                Debug.Log("Cut point: " + cutPoint);
                 containerFigureVertices.Add(cutPoint);
                 if (containerFigureVertices == firstFigureVertices)
                 {
@@ -82,6 +82,11 @@ public class SlideFigure
         newPoligonA = new Poligon(firstFigureVertices);
         newPoligonB = new Poligon(secondFigureVertices);
 
+    }
+
+    public Poligon GetPoligon()
+    {
+        return this.figurePoligon;
     }
 
 }

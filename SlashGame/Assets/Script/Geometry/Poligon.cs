@@ -51,8 +51,8 @@ namespace Assets.Script.Geometry
                 else if( i == poligonVertices.Count)
                 {
                     //Last segment
-                    pointA = poligonVertices[0] as Point;
-                    pointB = poligonVertices[poligonVertices.Count - 1] as Point;
+                    pointA = poligonVertices[poligonVertices.Count - 1] as Point;
+                    pointB = poligonVertices[0] as Point;
                 }
                 else
                 {
@@ -95,6 +95,8 @@ namespace Assets.Script.Geometry
                 Vector3 verticeVector = new Vector3(poligonVertex.x, poligonVertex.y, 0);
                 verticesList.Add(verticeVector);
             }
+            Vector3 verticeVectorLast = new Vector3(((Point)poligonVertices[0]).x, ((Point)poligonVertices[0]).y, 0);
+            verticesList.Add(verticeVectorLast);
 
             return verticesList.ToArray(typeof(Vector3)) as Vector3[];
         }
@@ -110,6 +112,23 @@ namespace Assets.Script.Geometry
         public ArrayList GetPoligonSides()
         {
             return this.poligonSides;
+        }
+
+        public override string ToString()
+        {
+            String str = "";
+            int count = 0;
+            /*foreach (Point vertex in poligonVertices)
+            {
+                str += "Vertex " + count + " : " + vertex.ToString();
+                count++;
+            }*/
+            foreach (Segment side in poligonSides)
+            {
+                str += "Side " + count + " : " + side;
+                count++;
+            }
+            return str;
         }
     }
 }

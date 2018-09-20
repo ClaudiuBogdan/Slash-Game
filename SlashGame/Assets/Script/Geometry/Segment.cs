@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Runtime.Remoting.Messaging;
 using UnityEngine;
 using UnityEngine.Assertions.Comparers;
 using UnityEngineInternal;
@@ -26,12 +27,17 @@ namespace Assets.Script.Geometry
         public Point Intersect(Segment segmentB)
         {
             //Check if the two segments are vertical
-            if ((float.IsInfinity(this.line.GetSlope()) || this.line.GetSlope() > float.MaxValue) && (float.IsInfinity(this.line.GetSlope()) || segmentB.line.GetSlope() > float.MaxValue))
+            if ((float.IsInfinity(this.line.GetSlope()) || this.line.GetSlope() > float.MaxValue) && (float.IsInfinity(segmentB.line.GetSlope()) || segmentB.line.GetSlope() > float.MaxValue))
                 return null;
-            if(Mathf.Abs(this.line.GetSlope() - segmentB.line.GetSlope()) < Point.epsiloError)
+            //Check if the two segments are equal
+            if (Mathf.Abs(this.line.GetSlope() - segmentB.line.GetSlope()) < Point.epsiloError)
                 return null;
             Point linePointIntersection = this.line.Intersect(segmentB.line);
-            if (this.ContainsPoint(linePointIntersection))
+            if(float.IsNaN(linePointIntersection.x) || float.IsNaN(linePointIntersection.y))
+            {
+                return null;
+            }
+            if (this.ContainsPoint(linePointIntersection) && segmentB.ContainsPoint(linePointIntersection))
             {
                 return linePointIntersection;
             }
@@ -43,19 +49,56 @@ namespace Assets.Script.Geometry
 
         public Boolean ContainsPoint(Point pointX)
         {
-            //Are in the same line
-            Line auxLine = new Line(pointA, pointX);
-            if (Mathf.Abs(auxLine.GetSlope() - this.line.GetSlope()) > Point.epsiloError &&
-                Mathf.Abs(auxLine.GetAbscissaCutPoint() - this.line.GetAbscissaCutPoint()) > Point.epsiloError)
-                return false;
+            bool isContained = false;
+            //Check if the points are in the same line
+            Vector3 vect1 = new Vector3(pointX.x - pointA.x, pointX.y - pointA.y, 0);
+            Vector3 vect2 = new Vector3(pointX.x - pointB.x, pointX.y - pointB.y, 0);
+            //Debug.Log("Angle points of line: " + Math.Abs(Vector3.Angle(vect1, vect2)));
+            if (Math.Abs(Vector3.Angle(vect1, vect2)) > 180 - Point.epsiloError)
+            {
+                if (pointA.x > pointB.x)
+                {
 
-            //The module sum
-            float mod1 = new Vector2(pointX.x - pointA.x, pointX.y - pointA.y).magnitude;
-            float mod2 = new Vector2(pointX.x - pointB.x, pointX.y - pointB.y).magnitude;
-            float mod3 = new Vector2(pointB.x - pointA.x, pointB.y - pointA.y).magnitude;
-            if (Mathf.Abs(mod1 + mod2 - mod3) > Point.epsiloError)
-                return false;
-            return true;
+                    if (pointA.y > pointB.y)
+                    {
+                        isContained =
+                            ((pointB.x <= pointX.x && pointA.x >= pointX.x) &&
+                             (pointB.y <= pointX.y && pointA.y >= pointX.y))
+                                ? true
+                                : false;
+                    }
+                    else
+                    {
+                        isContained =
+                            ((pointB.x <= pointX.x && pointA.x >= pointX.x) &&
+                             (pointB.y >= pointX.y && pointA.y <= pointX.y))
+                                ? true
+                                : false;
+                    }
+                }
+                else
+                {
+                    if (pointA.y > pointB.y)
+                    {
+                        isContained =
+                            ((pointB.x >= pointX.x && pointA.x <= pointX.x) &&
+                             (pointB.y <= pointX.y && pointA.y >= pointX.y))
+                                ? true
+                                : false;
+                    }
+                    else
+                    {
+                        isContained =
+                            ((pointB.x >= pointX.x && pointA.x <= pointX.x) &&
+                             (pointB.y >= pointX.y && pointA.y <= pointX.y))
+                                ? true
+                                : false;
+                    }
+                }
+            }
+
+            
+            return isContained;
         }
 
         public void SetIsSegmentCut(bool isCut)
@@ -68,5 +111,9 @@ namespace Assets.Script.Geometry
             return this.isCut;
         }
 
+        public override string ToString()
+        {
+            return "PointA: " + this.pointA + " PointB: " + pointB;
+        }
     }
 }

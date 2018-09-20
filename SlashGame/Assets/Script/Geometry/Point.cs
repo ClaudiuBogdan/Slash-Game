@@ -5,7 +5,7 @@ namespace Assets.Script.Geometry
 {
     public class Point
     {
-        public static float epsiloError = Mathf.Pow(1, -15);
+        public static float epsiloError = 0.1f;
         public float x;
         public float y;
 
@@ -18,6 +18,19 @@ namespace Assets.Script.Geometry
         public override string ToString()
         {
             return $"( {x} , {y} )";
+        }
+
+        protected bool Equals(Point other)
+        {
+            return x.Equals(other.x) && y.Equals(other.y);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (x.GetHashCode() * 397) ^ y.GetHashCode();
+            }
         }
     }
 }

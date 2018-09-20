@@ -101,13 +101,12 @@ public class WorldRenderer : MonoBehaviour
 
     private GameObject CreateSlideFigureObject(Poligon poligon)
     {
-        PoligonMesh poligonMesh = new PoligonMesh(poligon);
-
         //Render the poligon outline
         GameObject LineRendererObject = Instantiate(MainLineRendererPrefab, Vector3.zero, Quaternion.identity);
-        LineRenderer lineRenderer = MainLineRendererPrefab.GetComponent<LineRenderer>();
+        /*LineRenderer lineRenderer = MainLineRendererPrefab.GetComponent<LineRenderer>();
         poligonMesh.SetPoligonOutline(lineRenderer);
-        lineRenderer = poligonMesh.GetPoligonOutline();
+        lineRenderer = poligonMesh.GetPoligonOutline();*/
+        LineRendererObject.GetComponent<MeshFilter>().mesh = PoligonMesh.GetPoligonMesh(poligon);
         return LineRendererObject;
     }
 

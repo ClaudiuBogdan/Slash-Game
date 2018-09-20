@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Assets.Script.Geometry;
+using Assets.Script.Mesh;
 using UnityEngine;
 
 public class PoligonMesh
@@ -31,10 +32,30 @@ public class PoligonMesh
          *      b.If not, end.
          */
 
-        int i = aPoligon.GetPoligonVertices().Count;
-        poligonOutline.positionCount = i;
-        poligonOutline.SetPositions(aPoligon.GetPoligonVerticesAsVectors()); //Generates the outline of the polygon with the given vertices
-        
+        // Use the triangulator to get indices for creating triangles
+        Point[] vertices2D = aPoligon.GetPoligonVertices().ToArray(typeof(Point)) as Point[];
+        Triangulator tr = new Triangulator(vertices2D);
+        int[] indices = tr.Triangulate();
+
+        // Create the Vector3 vertices
+        Vector3[] vertices = new Vector3[vertices2D.Length];
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            vertices[i] = new Vector3(vertices2D[i].x, vertices2D[i].y, 0);
+        }
+
+        // Create the mesh
+        Mesh msh = new Mesh();
+        msh.vertices = vertices;
+        msh.triangles = indices;
+        msh.RecalculateNormals();
+        msh.RecalculateBounds();
+
+        this.poligonMesh = msh;
+        /*        int i = aPoligon.GetPoligonVertices().Count;
+                poligonOutline.positionCount = i;
+                poligonOutline.SetPositions(aPoligon.GetPoligonVerticesAsVectors()); //Generates the outline of the polygon with the given vertices*/
+
     }
 
     public LineRenderer GetPoligonOutline()
@@ -46,5 +67,29 @@ public class PoligonMesh
     {
         this.poligonOutline = lineRenderer;
         SetPoligonMesh(this.poligon);
+    }
+
+    public static Mesh GetPoligonMesh(Poligon poligonFig)
+    {
+        // Use the triangulator to get indices for creating triangles
+        Point[] vertices2D = poligonFig.GetPoligonVertices().ToArray(typeof(Point)) as Point[];
+        Triangulator tr = new Triangulator(vertices2D);
+        int[] indices = tr.Triangulate();
+
+        // Create the Vector3 vertices
+        Vector3[] vertices = new Vector3[vertices2D.Length];
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            vertices[i] = new Vector3(vertices2D[i].x, vertices2D[i].y, 0);
+        }
+
+        // Create the mesh
+        Mesh msh = new Mesh();
+        msh.vertices = vertices;
+        msh.triangles = indices;
+        msh.RecalculateNormals();
+        msh.RecalculateBounds();
+
+        return msh;
     }
 }

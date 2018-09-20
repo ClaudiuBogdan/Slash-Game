@@ -78,7 +78,8 @@ public class SlideFigure
             }
         }
         firstFigureVertices.Add(poligonVertices[0]);
-
+        firstFigureVertices.Reverse();
+        secondFigureVertices.Reverse();
         newPoligonA = new Poligon(firstFigureVertices);
         newPoligonB = new Poligon(secondFigureVertices);
 

@@ -18,11 +18,26 @@ public class WorldRenderer : MonoBehaviour
 	void Start () {
         //MainCamera = GameObject.Find("MainCamera");
 
-		//Create a poligon
-        ArrayList poligonVertices = new ArrayList(new Point[]{new Point(-1, 1), new Point(1, 1), new Point(1, -1), new Point(-1, -1) });
-	    //poligonVertices.Reverse();
-        
-        Poligon poligon = new Poligon(poligonVertices);
+        /*		//Create a poligon
+                ArrayList poligonVertices = new ArrayList(new Point[]{new Point(-1, 1), new Point(1, 1), new Point(1, -1), new Point(-1, -1) });*/
+
+	    ArrayList poligonVertices = new ArrayList();
+        float outerRadius = 2f;
+        float innerRadius = outerRadius * 0.866025404f;
+        Vector3[] corners = new Vector3[6];
+
+        corners[0] = new Vector3(0, 0, 0);
+        corners[1] = new Vector3(outerRadius * 0.5f, -innerRadius, 0);
+        corners[2] = new Vector3(-outerRadius * 0.5f, -innerRadius, 0);
+        corners[3] = new Vector3(-outerRadius, 0, 0);
+        corners[4] = new Vector3(-outerRadius * 0.5f, innerRadius, 0);
+        corners[5] = new Vector3(outerRadius * 0.5f, innerRadius, 0);
+	    foreach (Vector3 corner in corners)
+	    {
+	        poligonVertices.Add(new Point(corner.x, corner.y));
+	    }
+
+    Poligon poligon = new Poligon(poligonVertices);
 	    Debug.Log(poligon);
         MainSlideFigure = new SlideFigure(poligon);
 	    lineRendererObject = Instantiate(MainLineRendererPrefab, Vector3.zero, Quaternion.identity);//CreateSlideFigureObject(poligon);
@@ -89,6 +104,7 @@ public class WorldRenderer : MonoBehaviour
             lineRendererObject = CreateSlideFigureObject(MainSlideFigure.newPoligonA);
             CreateSlideFigureObject(MainSlideFigure.newPoligonB).GetComponent<Rigidbody>().useGravity = true;
             CleanSlideFigure();
+            MainSlideFigure.setPoligo(MainSlideFigure.newPoligonA);
         }
     }
 

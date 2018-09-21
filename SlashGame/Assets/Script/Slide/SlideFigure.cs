@@ -68,7 +68,6 @@ public class SlideFigure
                 
             }
         }
-        firstFigureVertices.Add(poligonVertices[poligonVertices.Count - 1]);
         newPoligonA = new Poligon(firstFigureVertices);
         newPoligonB = new Poligon(secondFigureVertices);
 
@@ -79,4 +78,8 @@ public class SlideFigure
         return this.figurePoligon;
     }
 
+    public void setPoligo(Poligon poligon)
+    {
+        this.figurePoligon = poligon;
+    }
 }

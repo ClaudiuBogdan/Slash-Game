@@ -58,17 +58,8 @@ public class SlideFigure
                 Point cutPoint = ((Segment) poligonSides[i]).ContainsPoint(figureCutPoints[0] as Point)
                     ? figureCutPoints[0] as Point
                     : figureCutPoints[1] as Point;
-                int lastPoligonSegmentsIndex = poligonVertices.Count - 1;
                 Debug.Log("Cut point: " + cutPoint);
                 containerFigureVertices.Add(cutPoint);
-                if (containerFigureVertices == firstFigureVertices)
-                {
-                    firstCutPoint = cutPoint;
-                }
-                else
-                {
-                    containerFigureVertices.Add(firstCutPoint);
-                }
 
                 containerFigureVertices = containerFigureVertices == firstFigureVertices
                     ? secondFigureVertices
@@ -77,9 +68,7 @@ public class SlideFigure
                 
             }
         }
-        firstFigureVertices.Add(poligonVertices[0]);
-        firstFigureVertices.Reverse();
-        secondFigureVertices.Reverse();
+        firstFigureVertices.Add(poligonVertices[poligonVertices.Count - 1]);
         newPoligonA = new Poligon(firstFigureVertices);
         newPoligonB = new Poligon(secondFigureVertices);
 

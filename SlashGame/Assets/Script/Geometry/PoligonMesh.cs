@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Assets.Script.Geometry;
 using Assets.Script.Mesh;
 using UnityEngine;
@@ -75,7 +76,7 @@ public class PoligonMesh
         Point[] vertices2D = poligonFig.GetPoligonVertices().ToArray(typeof(Point)) as Point[];
         Triangulator tr = new Triangulator(vertices2D);
         int[] indices = tr.Triangulate();
-
+        //indices.Reverse();
         // Create the Vector3 vertices
         Vector3[] vertices = new Vector3[vertices2D.Length];
         for (int i = 0; i < vertices.Length; i++)

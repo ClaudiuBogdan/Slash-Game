@@ -25,7 +25,13 @@ public class WorldRenderer : MonoBehaviour
         Poligon poligon = new Poligon(poligonVertices);
 	    Debug.Log(poligon);
         MainSlideFigure = new SlideFigure(poligon);
-	    lineRendererObject = CreateSlideFigureObject(poligon);
+	    lineRendererObject = Instantiate(MainLineRendererPrefab, Vector3.zero, Quaternion.identity);//CreateSlideFigureObject(poligon);
+        GameObject LineRendererObject = Instantiate(MainLineRendererPrefab, Vector3.zero, Quaternion.identity);
+	    /*LineRenderer lineRenderer = MainLineRendererPrefab.GetComponent<LineRenderer>();
+        poligonMesh.SetPoligonOutline(lineRenderer);
+        lineRenderer = poligonMesh.GetPoligonOutline();*/
+	    LineRendererObject.GetComponent<MeshFilter>().mesh = PoligonMesh.GetPoligonMesh(poligon);
+	    lineRendererObject = LineRendererObject;
 
 	}
 	

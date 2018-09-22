@@ -6,8 +6,8 @@ namespace Assets.Script.Geometry
     public class Point
     {
         public static float epsiloError = 0.1f;
-        public float x;
-        public float y;
+        public float x { get; set; }
+        public float y { get; set; }
 
         public Point(float x, float y)
         {
@@ -17,7 +17,7 @@ namespace Assets.Script.Geometry
 
         public override string ToString()
         {
-            return $"( {x} , {y} )";
+            return $"Point:( {x} , {y} )";
         }
 
         protected bool Equals(Point other)
@@ -31,6 +31,11 @@ namespace Assets.Script.Geometry
             {
                 return (x.GetHashCode() * 397) ^ y.GetHashCode();
             }
+        }
+
+        public float DistanceToPoint(Point aPoint)
+        {
+            return Mathf.Sqrt(Mathf.Pow(aPoint.x - this.x,2) + Mathf.Pow(aPoint.y - this.y, 2));
         }
     }
 }

@@ -42,8 +42,13 @@ public class SlideFigure
 
     public void CutFigure()
     {
-        if(figureCutPoints.Count < 2)
-            return;
+        /**
+         * ToDo: add a condition that ensure the cut point and the closest segment vertex isn't close enough.
+         */
+
+        /**
+         * ToDo: start the polygon from the cut vertex.
+         */
         ArrayList poligonSides = figurePoligon.GetPoligonSides();
         ArrayList poligonVertices = figurePoligon.GetPoligonVertices();
         Point firstCutPoint = null;
@@ -53,18 +58,32 @@ public class SlideFigure
         for (int i = 0; i < poligonSides.Count; i++)
         { 
             containerFigureVertices.Add(poligonVertices[i]);
-            if (((Segment) poligonSides[i]).isSegmentCut())
+            Segment segment = ((Segment) poligonSides[i]);
+            if (segment.isSegmentCut())
             {
-                Point cutPoint = ((Segment) poligonSides[i]).ContainsPoint(figureCutPoints[0] as Point)
+                Point cutPoint = segment.ContainsPoint(figureCutPoints[0] as Point)
                     ? figureCutPoints[0] as Point
                     : figureCutPoints[1] as Point;
-                Debug.Log("Cut point: " + cutPoint);
-                containerFigureVertices.Add(cutPoint);
+                Debug.Log("Distance Cut pointA: " + cutPoint.DistanceToPoint(segment.getPointA()));
+                Debug.Log("Distance Cut pointB: " + cutPoint.DistanceToPoint(segment.getPointB()));
+                if ((cutPoint.DistanceToPoint(segment.getPointA()) > Point.epsiloError/*px*/) )
+                {
+                    containerFigureVertices.Add(cutPoint);
+                }
+
+                /*cutPoint = cutPoint.DistanceToPoint(segment.getPointA()) < Point.epsiloError /*px#1# ? segment.getPointA() : cutPoint;
+                cutPoint = cutPoint.DistanceToPoint(segment.getPointB()) < Point.epsiloError /*px#1# ? segment.getPointB() : cutPoint;
+                Debug.Log("Cut point: " + cutPoint);*/
+                
 
                 containerFigureVertices = containerFigureVertices == firstFigureVertices
                     ? secondFigureVertices
                     : firstFigureVertices;
-                containerFigureVertices.Add(cutPoint);
+                if ((cutPoint.DistanceToPoint(segment.getPointB()) > Point.epsiloError) /*px*/)
+                {
+                    containerFigureVertices.Add(cutPoint);
+                }
+                   
                 
             }
         }

@@ -115,5 +115,15 @@ namespace Assets.Script.Geometry
         {
             return "PointA: " + this.pointA + " PointB: " + pointB;
         }
+
+        public Point getPointA()
+        {
+            return this.pointA;
+        }
+
+        public Point getPointB()
+        {
+            return this.pointB;
+        }
     }
 }

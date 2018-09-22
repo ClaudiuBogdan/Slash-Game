@@ -75,7 +75,7 @@ namespace Assets.Script.Geometry
             foreach (Segment segmentSide in poligonSides)
             {
                 Point intersectionPoint = segmentSide.Intersect(segmentA);
-                if (intersectionPoint != null)
+                if (intersectionPoint != null && !segmentSide.isSegmentCut())
                 {
                     intersectionPointsList.Add(intersectionPoint);
                     segmentSide.SetIsSegmentCut(true);
@@ -86,8 +86,8 @@ namespace Assets.Script.Geometry
         }
 
         public ArrayList GetPoligonVertices()
-        {
-            return this.poligonVertices.Clone() as ArrayList;
+        { 
+            return this.poligonVertices as ArrayList;
         }
 
         public Vector3[] GetPoligonVerticesAsVectors()

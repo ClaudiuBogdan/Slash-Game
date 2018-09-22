@@ -117,6 +117,25 @@ namespace Assets.Script.Geometry
             return this.poligonSides;
         }
 
+        public float GetArea()
+        {
+            Point[] m_points = this.GetPoligonVerticesAsPointArray();
+            int n = m_points.Length;
+            float A = 0.0f;
+            for (int p = n - 1, q = 0; q < n; p = q++)
+            {
+                Point pval = m_points[p];
+                Point qval = m_points[q];
+                A += pval.x * qval.y - qval.x * pval.y;
+            }
+            return (A * 0.5f);
+        }
+
+        private Point[] GetPoligonVerticesAsPointArray()
+        {
+            return this.GetPoligonVertices().ToArray(typeof(Point)) as Point[];
+        }
+
         public override string ToString()
         {
             String str = "";

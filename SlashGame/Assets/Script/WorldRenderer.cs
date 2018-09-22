@@ -113,15 +113,15 @@ public class WorldRenderer : MonoBehaviour
         {
             MainSlideFigure.CutFigure();
             Debug.Log("Figure cut");
-            /*MainSlideFigure.newPoligonA;
-            MainSlideFigure.newPoligonB;*/
+            /*MainSlideFigure.BigPolygon;
+            MainSlideFigure.SmallPolygon;*/
             GameObject.Destroy(lineRendererObject);
-            lineRendererObject = CreateSlideFigureObject(MainSlideFigure.newPoligonA);
-            GameObject secondFig = CreateSlideFigureObject(MainSlideFigure.newPoligonB);
+            lineRendererObject = CreateSlideFigureObject(MainSlideFigure.BigPolygon);
+            GameObject secondFig = CreateSlideFigureObject(MainSlideFigure.SmallPolygon);
             secondFig.GetComponent<Rigidbody>().useGravity = true;
             secondFig.GetComponent<Rigidbody>().AddForce(MainSlideFigure.GetForceDirection(), ForceMode.Impulse);
 
-            MainSlideFigure.setPoligo(MainSlideFigure.newPoligonA);
+            MainSlideFigure.setPoligo(MainSlideFigure.BigPolygon);
             CleanSlideFigure();
         }
     }

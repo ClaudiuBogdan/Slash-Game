@@ -10,8 +10,8 @@ public class SlideFigure
     private Poligon figurePoligon;
     private ArrayList figureCutPoints;
 
-    public Poligon newPoligonA;
-    public Poligon newPoligonB;
+    public Poligon BigPolygon;
+    public Poligon SmallPolygon;
 
     public SlideFigure(Poligon poligon)
     {
@@ -65,8 +65,10 @@ public class SlideFigure
                 containerFigureVertices.Add(cutPoint);
             }
         }
-        newPoligonA = new Poligon(ValidatePoligon(firstFigureVertices));
-        newPoligonB = new Poligon(ValidatePoligon(secondFigureVertices));
+        Poligon poligonA  = new Poligon(ValidatePoligon(firstFigureVertices));
+        Poligon poligonB = new Poligon(ValidatePoligon(secondFigureVertices));
+        BigPolygon = poligonA.GetArea() < poligonB.GetArea() ? poligonA : poligonB;
+        SmallPolygon = BigPolygon == poligonA ? poligonB : poligonA;
 
     }
 
@@ -117,6 +119,8 @@ public class SlideFigure
     {
         this.figurePoligon = poligon;
     }
+
+
 
     public Vector3 GetForceDirection()
     {

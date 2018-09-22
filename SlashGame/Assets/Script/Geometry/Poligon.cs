@@ -13,6 +13,9 @@ namespace Assets.Script.Geometry
 
         public Poligon(ArrayList poligonVertices)
         {
+            //Trow exeption if verices length is less than 3;
+            if(poligonVertices.Count < 3)
+                return;
             this.poligonVertices = poligonVertices;
             SetPoligonSides(poligonVertices);
             SetPoligonTriangles(poligonVertices);
@@ -20,7 +23,7 @@ namespace Assets.Script.Geometry
 
         //Vertices must be ordered and size grater than 2
         private void SetPoligonTriangles(ArrayList verticesList)
-        {
+        { 
             Point lateralPointA = verticesList[0] as Point;
             Point centerPoint = verticesList[2] as Point;
             Point lateralPointB = verticesList[1] as Point;

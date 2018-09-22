@@ -119,8 +119,10 @@ public class WorldRenderer : MonoBehaviour
             lineRendererObject = CreateSlideFigureObject(MainSlideFigure.BigPolygon);
             GameObject secondFig = CreateSlideFigureObject(MainSlideFigure.SmallPolygon);
             secondFig.GetComponent<Rigidbody>().useGravity = true;
-            secondFig.GetComponent<Rigidbody>().AddForce(MainSlideFigure.GetForceDirection(), ForceMode.Impulse);
-
+            //secondFig.GetComponent<Rigidbody>().AddForce(MainSlideFigure.GetForceDirection(), ForceMode.Impulse);
+            secondFig.GetComponent<MeshCollider>().sharedMesh = secondFig.GetComponent<MeshFilter>().mesh;
+            secondFig.GetComponent<Rigidbody>().ResetCenterOfMass();
+            secondFig.GetComponent<Rigidbody>().AddForceAtPosition(MainSlideFigure.GetForceDirection(), MainSlideFigure.GetForceApplicationPoint(),ForceMode.Impulse);
             MainSlideFigure.setPoligo(MainSlideFigure.BigPolygon);
             CleanSlideFigure();
         }

@@ -64,27 +64,32 @@ public class WorldRenderer : MonoBehaviour
 	
 	// Update is called once per frame
 	void Update () {
-	    if (isFingerTouchFirstTime())
-	    {
-	        //Debug.Log("Touched first time");
+
+	}
+
+    void FixedUpdate()
+    {
+        if (isFingerTouchFirstTime())
+        {
+            //Debug.Log("Touched first time");
             firstSegmentPoint = new Point(GetMousePositionToWorld().x, GetMousePositionToWorld().y);
-	        
+
         }
         if (isScreenTouched())
-	    {
+        {
             //Debug.Log(GetMousePositionToWorld());
             //Debug.Log("Touching...");
-	        DetectFigureCut();
+            DetectFigureCut();
         }
 
-	    if (isFingerRelease())
-	    {
+        if (isFingerRelease())
+        {
             // Debug.Log("Release touch");
             //firstSegmentPoint = null;
             CleanSlideFigure();
 
-	    }
-	}
+        }
+    }
 
     private void CleanSlideFigure()
     {

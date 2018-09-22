@@ -64,32 +64,48 @@ public class SlideFigure
                 Point cutPoint = segment.ContainsPoint(figureCutPoints[0] as Point)
                     ? figureCutPoints[0] as Point
                     : figureCutPoints[1] as Point;
-                Debug.Log("Distance Cut pointA: " + cutPoint.DistanceToPoint(segment.GetPointA()));
-                Debug.Log("Distance Cut pointB: " + cutPoint.DistanceToPoint(segment.GetPointB()));
-                if ((cutPoint.DistanceToPoint(segment.GetPointA()) > Point.epsiloError/*px*/) )
-                {
-                    containerFigureVertices.Add(cutPoint);
-                }
-
-                /*cutPoint = cutPoint.DistanceToPoint(segment.getPointA()) < Point.epsiloError /*px#1# ? segment.getPointA() : cutPoint;
-                cutPoint = cutPoint.DistanceToPoint(segment.getPointB()) < Point.epsiloError /*px#1# ? segment.getPointB() : cutPoint;
-                Debug.Log("Cut point: " + cutPoint);*/
-                
-
+                containerFigureVertices.Add(cutPoint);
+                //Switch polygon array.
                 containerFigureVertices = containerFigureVertices == firstFigureVertices
                     ? secondFigureVertices
                     : firstFigureVertices;
-                if ((cutPoint.DistanceToPoint(segment.GetPointB()) > Point.epsiloError) /*px*/)
-                {
-                    containerFigureVertices.Add(cutPoint);
-                }
-                   
-                
+                containerFigureVertices.Add(cutPoint);
             }
         }
-        newPoligonA = new Poligon(firstFigureVertices);
-        newPoligonB = new Poligon(secondFigureVertices);
+        newPoligonA = new Poligon(ValidatePoligon(firstFigureVertices));
+        newPoligonB = new Poligon(ValidatePoligon(secondFigureVertices));
 
+    }
+
+    private ArrayList ValidatePoligon(ArrayList polygonVertices)
+    {
+        float minDistanceBetweenVertices = 0.1f;
+        bool firstTime = true;
+        Point firstPoint = null;
+        Point secondPoint= null;
+        int verticesCount = polygonVertices.Count;
+        for (int i=0; i<verticesCount ; i++)
+        {
+            if (firstTime)
+            {
+                secondPoint = polygonVertices[i] as Point;
+                firstTime = false;
+            }
+            else
+            {
+                firstPoint = secondPoint;
+                secondPoint = polygonVertices[i] as Point;
+                if (secondPoint.DistanceToPoint(firstPoint) < minDistanceBetweenVertices)
+                {
+                    polygonVertices.Remove(secondPoint);
+                    verticesCount--;
+                    Debug.Log("Distance between points: " + secondPoint.DistanceToPoint(firstPoint));
+                }
+            }
+            
+
+        }
+        return polygonVertices;
     }
 
     public Poligon GetPoligon()

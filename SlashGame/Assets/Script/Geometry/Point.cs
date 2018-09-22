@@ -5,7 +5,7 @@ namespace Assets.Script.Geometry
 {
     public class Point
     {
-        public static float epsiloError = 0.001f;
+        public static float epsiloError = 0.01f;
         public float x { get; set; }
         public float y { get; set; }
 

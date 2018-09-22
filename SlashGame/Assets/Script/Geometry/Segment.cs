@@ -101,27 +101,27 @@ namespace Assets.Script.Geometry
             return isContained;
         }
 
-        public void SetIsSegmentCut(bool isCut)
+        public void SetIsSegmentCut(bool isCutSetter)
         {
-            this.isCut = isCut;
+            this.isCut = isCutSetter;
         }
 
-        public Boolean isSegmentCut()
+        public Boolean IsSegmentCut()
         {
             return this.isCut;
         }
 
         public override string ToString()
         {
-            return "PointA: " + this.pointA + " PointB: " + pointB;
+            return $"Segment {pointA} - {pointB}";
         }
 
-        public Point getPointA()
+        public Point GetPointA()
         {
             return this.pointA;
         }
 
-        public Point getPointB()
+        public Point GetPointB()
         {
             return this.pointB;
         }

@@ -75,7 +75,7 @@ namespace Assets.Script.Geometry
             foreach (Segment segmentSide in poligonSides)
             {
                 Point intersectionPoint = segmentSide.Intersect(segmentA);
-                if (intersectionPoint != null && !segmentSide.isSegmentCut())
+                if (intersectionPoint != null && !segmentSide.IsSegmentCut())
                 {
                     intersectionPointsList.Add(intersectionPoint);
                     segmentSide.SetIsSegmentCut(true);

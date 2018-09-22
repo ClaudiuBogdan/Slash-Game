@@ -59,14 +59,14 @@ public class SlideFigure
         { 
             containerFigureVertices.Add(poligonVertices[i]);
             Segment segment = ((Segment) poligonSides[i]);
-            if (segment.isSegmentCut())
+            if (segment.IsSegmentCut())
             {
                 Point cutPoint = segment.ContainsPoint(figureCutPoints[0] as Point)
                     ? figureCutPoints[0] as Point
                     : figureCutPoints[1] as Point;
-                Debug.Log("Distance Cut pointA: " + cutPoint.DistanceToPoint(segment.getPointA()));
-                Debug.Log("Distance Cut pointB: " + cutPoint.DistanceToPoint(segment.getPointB()));
-                if ((cutPoint.DistanceToPoint(segment.getPointA()) > Point.epsiloError/*px*/) )
+                Debug.Log("Distance Cut pointA: " + cutPoint.DistanceToPoint(segment.GetPointA()));
+                Debug.Log("Distance Cut pointB: " + cutPoint.DistanceToPoint(segment.GetPointB()));
+                if ((cutPoint.DistanceToPoint(segment.GetPointA()) > Point.epsiloError/*px*/) )
                 {
                     containerFigureVertices.Add(cutPoint);
                 }
@@ -79,7 +79,7 @@ public class SlideFigure
                 containerFigureVertices = containerFigureVertices == firstFigureVertices
                     ? secondFigureVertices
                     : firstFigureVertices;
-                if ((cutPoint.DistanceToPoint(segment.getPointB()) > Point.epsiloError) /*px*/)
+                if ((cutPoint.DistanceToPoint(segment.GetPointB()) > Point.epsiloError) /*px*/)
                 {
                     containerFigureVertices.Add(cutPoint);
                 }

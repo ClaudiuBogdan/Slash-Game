@@ -74,16 +74,14 @@ public class WorldRenderer : MonoBehaviour
 	    {
             //Debug.Log(GetMousePositionToWorld());
             //Debug.Log("Touching...");
-            DetectFigureCut();
-
+	        DetectFigureCut();
         }
 
 	    if (isFingerRelease())
 	    {
-	        
             // Debug.Log("Release touch");
             //firstSegmentPoint = null;
-	        CleanSlideFigure();
+            CleanSlideFigure();
 
 	    }
 	}

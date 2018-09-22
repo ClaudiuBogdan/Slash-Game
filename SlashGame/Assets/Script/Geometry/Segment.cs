@@ -54,16 +54,16 @@ namespace Assets.Script.Geometry
                 if (rightPoint.y > leftPoint.y)
                     {
                         isContained =
-                            ((leftPoint.x < pointX.x && rightPoint.x > pointX.x) &&
-                             (leftPoint.y < pointX.y && rightPoint.y > pointX.y))
+                            ((leftPoint.x <= pointX.x && rightPoint.x >= pointX.x) &&
+                             (leftPoint.y <= pointX.y && rightPoint.y >= pointX.y))
                                 ? true
                                 : false;
                     }
                     else
                     {
                         isContained =
-                            ((leftPoint.x < pointX.x && rightPoint.x > pointX.x) &&
-                             (leftPoint.y > pointX.y && rightPoint.y < pointX.y))
+                            ((leftPoint.x <= pointX.x && rightPoint.x >= pointX.x) &&
+                             (leftPoint.y >= pointX.y && rightPoint.y <= pointX.y))
                                 ? true
                                 : false;
                     }

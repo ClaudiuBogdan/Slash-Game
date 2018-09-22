@@ -20,8 +20,8 @@ namespace Assets.Script.Geometry
             this.pointA = pointA;
             this.pointB = pointB;
             this.Slope = Mathf.Abs(pointB.x - pointA.x) < Point.epsiloError ? float.PositiveInfinity : (pointB.y - pointA.y) / (pointB.x - pointA.x);
-            this.abscissaCutPoint = ( - pointA.x) * Slope + pointA.y;
-            this._coefA = -Slope;
+            this.abscissaCutPoint = pointA.y - pointA.x * Slope;
+            this._coefA = float.IsInfinity(Slope) ? pointA.x : -Slope;
             this._coefB = float.IsInfinity(Slope) ? 0 : 1;
             this._coefC = abscissaCutPoint;
         }

@@ -42,13 +42,6 @@ public class SlideFigure
 
     public void CutFigure()
     {
-        /**
-         * ToDo: add a condition that ensure the cut point and the closest segment vertex isn't close enough.
-         */
-
-        /**
-         * ToDo: start the polygon from the cut vertex.
-         */
         ArrayList poligonSides = figurePoligon.GetPoligonSides();
         ArrayList poligonVertices = figurePoligon.GetPoligonVertices();
         Point firstCutPoint = null;
@@ -116,5 +109,12 @@ public class SlideFigure
     public void setPoligo(Poligon poligon)
     {
         this.figurePoligon = poligon;
+    }
+
+    public Vector3 GetForceDirection()
+    {
+        Vector3 tangencialDirection = new Vector3(((Point)figureCutPoints[1]).x - ((Point)figureCutPoints[0]).x, ((Point)figureCutPoints[1]).y - ((Point)figureCutPoints[0]).y);
+        Vector3 normalDirection = Vector3.Cross(Vector3.back, tangencialDirection);
+        return tangencialDirection.normalized * 5;
     }
 }

@@ -117,9 +117,12 @@ public class WorldRenderer : MonoBehaviour
             MainSlideFigure.newPoligonB;*/
             GameObject.Destroy(lineRendererObject);
             lineRendererObject = CreateSlideFigureObject(MainSlideFigure.newPoligonA);
-            CreateSlideFigureObject(MainSlideFigure.newPoligonB).GetComponent<Rigidbody>().useGravity = true;
-            CleanSlideFigure();
+            GameObject secondFig = CreateSlideFigureObject(MainSlideFigure.newPoligonB);
+            secondFig.GetComponent<Rigidbody>().useGravity = true;
+            secondFig.GetComponent<Rigidbody>().AddForce(MainSlideFigure.GetForceDirection(), ForceMode.Impulse);
+
             MainSlideFigure.setPoligo(MainSlideFigure.newPoligonA);
+            CleanSlideFigure();
         }
     }
 

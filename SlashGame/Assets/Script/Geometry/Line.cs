@@ -47,8 +47,9 @@ namespace Assets.Script.Geometry
         {
             float delta = this._coefA * lineB._coefB - lineB._coefA * this._coefB;
 
+            //Lines are parallel
             if (Mathf.Abs(delta) < Point.epsiloError)
-                throw new ArgumentException("Lines are parallel");
+                return null;
 
             float x = (lineB._coefB * this._coefC - this._coefB * lineB._coefC) / delta;
             float y = (this._coefA * lineB._coefC - lineB._coefA * this._coefC) / delta;

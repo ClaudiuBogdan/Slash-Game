@@ -28,15 +28,8 @@ namespace Assets.Script.Geometry
          */
         public Point Intersect(Segment segmentB)
         {
-            Point linePointIntersection = null;
-            try
-            {
-                linePointIntersection = this.line.Intersect(segmentB.line);
-            }
-            catch (System.ArgumentException ex)
-            {
-                Debug.Log("Parallel lines" + ex.StackTrace);
-            }
+            Point linePointIntersection = this.line.Intersect(segmentB.line);
+            
             if (!(this.ContainsPoint(linePointIntersection) && segmentB.ContainsPoint(linePointIntersection)))
             {
                 linePointIntersection = null;

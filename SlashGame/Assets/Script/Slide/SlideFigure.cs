@@ -36,7 +36,7 @@ public class SlideFigure
         if (intersectionPoints.Count > 0)
         {
             figureCutPoints.Add(intersectionPoints[0]);
-            //Debug.Log("Intersection point: " + ((Point)intersectionPoints[0]));
+            Debug.Log($"Intersection point: {((Point)intersectionPoints[0])}, arrLength: {intersectionPoints.Count}");
         }
     }
 

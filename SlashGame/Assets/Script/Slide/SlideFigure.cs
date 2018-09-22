@@ -36,7 +36,7 @@ public class SlideFigure
         if (intersectionPoints.Count > 0)
         {
             figureCutPoints.Add(intersectionPoints[0]);
-            Debug.Log($"Intersection point: {((Point)intersectionPoints[0])}, arrLength: {intersectionPoints.Count}");
+            //Debug.Log($"Intersection point: {((Point)intersectionPoints[0])}, arrLength: {intersectionPoints.Count}");
         }
     }
 
@@ -70,35 +70,42 @@ public class SlideFigure
 
     }
 
+    /**
+     * Method that checks if the consecutive vertices are separated. 
+     */
     private ArrayList ValidatePoligon(ArrayList polygonVertices)
     {
         float minDistanceBetweenVertices = 0.1f;
         bool firstTime = true;
         Point firstPoint = null;
         Point secondPoint= null;
+        ArrayList validatedPolygonVertices = new ArrayList();
         int verticesCount = polygonVertices.Count;
         for (int i=0; i<verticesCount ; i++)
         {
             if (firstTime)
             {
                 secondPoint = polygonVertices[i] as Point;
+                validatedPolygonVertices.Add(secondPoint);
                 firstTime = false;
             }
             else
             {
                 firstPoint = secondPoint;
                 secondPoint = polygonVertices[i] as Point;
-                if (secondPoint.DistanceToPoint(firstPoint) < minDistanceBetweenVertices)
+                if (secondPoint.DistanceToPoint(firstPoint) > minDistanceBetweenVertices)
                 {
-                    polygonVertices.Remove(secondPoint);
-                    verticesCount--;
-                    Debug.Log("Distance between points: " + secondPoint.DistanceToPoint(firstPoint));
+                    validatedPolygonVertices.Add(secondPoint);
                 }
             }
-            
-
         }
-        return polygonVertices;
+
+        if (validatedPolygonVertices.Count == 2)
+        {
+            validatedPolygonVertices.Add(new Point((validatedPolygonVertices[1] as Point).x + minDistanceBetweenVertices,
+                (validatedPolygonVertices[1] as Point).y + minDistanceBetweenVertices));
+        }
+        return validatedPolygonVertices;
     }
 
     public Poligon GetPoligon()

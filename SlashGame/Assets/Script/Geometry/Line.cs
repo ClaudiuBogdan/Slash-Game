@@ -50,6 +50,11 @@ namespace Assets.Script.Geometry
             //Lines are parallel
             if (Mathf.Abs(delta) < Point.epsiloError)
                 return null;
+            //Check if the lines are vertical
+            if(float.IsInfinity(this.Slope))
+                return new Point(this.pointA.x, lineB.GetYForX(this.pointA.x));
+            if (float.IsInfinity(lineB.Slope))
+                return new Point(lineB.pointA.x, this.GetYForX(lineB.pointA.x));
 
             float x = (lineB._coefB * this._coefC - this._coefB * lineB._coefC) / delta;
             float y = (this._coefA * lineB._coefC - lineB._coefA * this._coefC) / delta;

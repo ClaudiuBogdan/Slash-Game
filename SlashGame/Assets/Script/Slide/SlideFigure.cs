@@ -2,13 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using Assets.Script.Geometry;
+using Assets.Script.Slide;
 using UnityEngine;
 
 public class SlideFigure
 {
 
     private Polygon _figurePolygon;
-    private ArrayList figureCutPoints;
+    private Cutter cutter;
 
     public Polygon BigPolygon;
     public Polygon SmallPolygon;
@@ -16,18 +17,18 @@ public class SlideFigure
     public SlideFigure(Polygon polygon)
     {
         SetPolygon(polygon);
-        this.figureCutPoints = new ArrayList();
+        cutter = new Cutter();
     }
 
     public void resetCutPoints()
     {
-        figureCutPoints.Clear();
+        cutter.Clear();
         _figurePolygon.ResetCutSegments();
     }
 
     public Boolean isReadyToCut()
     {
-        return figureCutPoints.Count == 2;
+        return cutter.IsCutterReady();
     }
 
     public void CheckIntersection(Segment segment)
@@ -35,20 +36,17 @@ public class SlideFigure
         ArrayList intersectionPoints = _figurePolygon.GetSegmentIntersectionPoints(segment);
         if (intersectionPoints.Count > 0)
 {
-            Debug.Log($"0 Intersection point: {((Point)intersectionPoints[0])}, arrLength: {figureCutPoints.Count}");
-            if (figureCutPoints.Count > 0)
+            if (!cutter.IsEmpty())
             {
-                Debug.Log($"2 Intersection point: {((Point)intersectionPoints[0])}, arrLength: {figureCutPoints.Count}");
-                Segment cuttingSegment = new Segment(figureCutPoints[0] as Point, intersectionPoints[0] as Point);
+                Segment cuttingSegment = new Segment(cutter.FirstCutPoint, intersectionPoints[0] as Point);
                 if (_figurePolygon.IsPointInsidePolygon(cuttingSegment.GetMiddlePoint()))
                 {
-                    figureCutPoints.Add(intersectionPoints[0]);
+                    cutter.SetCutPoint(intersectionPoints[0] as Point, 0);
                 }
             }
             else
             {
-                figureCutPoints.Add(intersectionPoints[0]);
-                Debug.Log($"1 Intersection point: {((Point)intersectionPoints[0])}, arrLength: {figureCutPoints.Count}");
+                cutter.SetCutPoint(intersectionPoints[0] as Point, 0) ;
             }
 
 
@@ -57,8 +55,6 @@ public class SlideFigure
 
     public void CutFigure()
     {
-        Debug.Log($"Cut point 1: {figureCutPoints[0] as Point}");
-        Debug.Log($"Cut point 2: {figureCutPoints[1] as Point}");
         ArrayList poligonSides = _figurePolygon.GetPolygonSides();
         ArrayList poligonVertices = _figurePolygon.GetPolygonVertices();
         Point firstCutPoint = null;
@@ -71,9 +67,9 @@ public class SlideFigure
             Segment segment = ((Segment) poligonSides[i]);
             if (segment.IsSegmentCut())
             {
-                Point cutPoint = segment.ContainsPoint(figureCutPoints[0] as Point)
-                    ? figureCutPoints[0] as Point
-                    : figureCutPoints[1] as Point;
+                Point cutPoint = segment.ContainsPoint(cutter.FirstCutPoint)
+                    ? cutter.FirstCutPoint
+                    : cutter.SecondCutPoint;
                 containerFigureVertices.Add(cutPoint);
                 //Switch polygon array.
                 containerFigureVertices = containerFigureVertices == firstFigureVertices
@@ -141,14 +137,14 @@ public class SlideFigure
 
     public Vector3 GetForceDirection()
     {
-        Vector3 tangencialDirection = new Vector3(((Point)figureCutPoints[1]).x - ((Point)figureCutPoints[0]).x, ((Point)figureCutPoints[1]).y - ((Point)figureCutPoints[0]).y, 15);
+        Vector3 tangencialDirection = new Vector3(cutter.SecondCutPoint.x - cutter.FirstCutPoint.x, cutter.SecondCutPoint.y - cutter.FirstCutPoint.y, 15);
         Vector3 normalDirection = Vector3.Cross(Vector3.back, tangencialDirection);
         return  - tangencialDirection.normalized * 5;
     }
 
     public Vector3 GetForceApplicationPoint()
     {
-        Point middlPoint = new Point((((Point)figureCutPoints[1]).x + ((Point)figureCutPoints[0]).x)/2.0f, (((Point)figureCutPoints[1]).y + ((Point)figureCutPoints[0]).y)/2.0f);
+        Point middlPoint = new Point((cutter.SecondCutPoint.x + cutter.FirstCutPoint.x)/2.0f, (cutter.SecondCutPoint.y + cutter.FirstCutPoint.y)/2.0f);
         return new Vector3(middlPoint.x, middlPoint.y, 0);
     }
 }

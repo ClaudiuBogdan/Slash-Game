@@ -19,7 +19,7 @@ public class PoligonMesh
         //SetPoligonMesh(poligon);
     }
 
-    private void SetPoligonMesh(Poligon aPoligon)
+    /*private void SetPoligonMesh(Poligon aPoligon)
     {
         ArrayList meshElementList = new ArrayList();
         /*
@@ -31,7 +31,7 @@ public class PoligonMesh
          * 5.Check if the arrayList size is grater the two
          *      a.If it is, back to 1
          *      b.If not, end.
-         */
+         #1#
 
         // Use the triangulator to get indices for creating triangles
         Point[] vertices2D = aPoligon.GetPoligonVertices().ToArray(typeof(Point)) as Point[];
@@ -55,20 +55,20 @@ public class PoligonMesh
         this.poligonMesh = msh;
         /*        int i = aPoligon.GetPoligonVertices().Count;
                 poligonOutline.positionCount = i;
-                poligonOutline.SetPositions(aPoligon.GetPoligonVerticesAsVectors()); //Generates the outline of the polygon with the given vertices*/
+                poligonOutline.SetPositions(aPoligon.GetPoligonVerticesAsVectors()); //Generates the outline of the polygon with the given vertices#1#
 
-    }
+    }*/
 
     public LineRenderer GetPoligonOutline()
     {
         return poligonOutline;
     }
 
-    public void SetPoligonOutline(LineRenderer lineRenderer)
+/*    public void SetPoligonOutline(LineRenderer lineRenderer)
     {
         this.poligonOutline = lineRenderer;
         SetPoligonMesh(this.poligon);
-    }
+    }*/
 
     public static Mesh GetPoligonMesh(Poligon poligonFig)
     {
@@ -76,7 +76,7 @@ public class PoligonMesh
         Point[] vertices2D = poligonFig.GetPoligonVertices().ToArray(typeof(Point)) as Point[];
         Triangulator tr = new Triangulator(vertices2D);
         int[] indices = tr.Triangulate();
-        //indices.Reverse();
+
         // Create the Vector3 vertices
         Vector3[] vertices = new Vector3[vertices2D.Length];
         for (int i = 0; i < vertices.Length; i++)
@@ -88,11 +88,14 @@ public class PoligonMesh
         Mesh msh = new Mesh();
         msh.vertices = vertices;
         msh.triangles = indices;
+
         msh.RecalculateNormals();
         msh.RecalculateBounds();
+
         Mesh invMsh = InvertMesh(msh);
-        msh = CombineMeshes(invMsh, msh);
-        return msh;
+        Mesh sepMsh = SeparateMeshes(msh, -1);
+        Mesh finalMsh = CombineMeshes(invMsh, sepMsh);
+        return finalMsh;
     }
 
     public static Mesh InvertMesh(Mesh mesh)
@@ -118,7 +121,8 @@ public class PoligonMesh
             }
             invertedMesh.SetTriangles(triangles, m);
         }
-
+        invertedMesh.RecalculateNormals();
+        invertedMesh.RecalculateBounds();
         return invertedMesh;
     }
 
@@ -126,24 +130,66 @@ public class PoligonMesh
     {
         Mesh combinedMesh = new Mesh();
 
+        /*        Vector3[] combinedVertices = new Vector3[meshA.vertexCount + meshB.vertexCount];
+                meshA.vertices.CopyTo(combinedVertices, 0);
+                meshB.vertices.CopyTo(combinedVertices, meshB.vertexCount);
+                combinedMesh.vertices = combinedVertices;
+
+                Vector3[] combinedNormals = new Vector3[meshA.normals.Length + meshB.normals.Length];
+                meshA.normals.CopyTo(combinedNormals, 0);
+                meshB.normals.CopyTo(combinedNormals, meshB.normals.Length);
+                combinedMesh.normals = combinedNormals;
+
+                int[] combinedTriangles = new int[meshA.triangles.Length + meshB.triangles.Length];
+                meshA.triangles.CopyTo(combinedTriangles, 0);
+                meshB.triangles.CopyTo(combinedTriangles, meshB.triangles.Length);
+                combinedMesh.triangles = combinedTriangles;*/
+
         Vector3[] combinedVertices = new Vector3[meshA.vertexCount + meshB.vertexCount];
-        meshA.vertices.CopyTo(combinedVertices, 0);
-        meshB.vertices.CopyTo(combinedVertices, meshB.vertexCount);
+        for (int i = 0; i < meshA.vertexCount; i++)
+        {
+            combinedVertices[i] = meshA.vertices[i];
+        }
+        for (int i = 0; i < meshB.vertexCount; i++)
+        {
+            combinedVertices[meshA.vertexCount + i] = meshB.vertices[i];
+        }
         combinedMesh.vertices = combinedVertices;
 
-        Vector3[] combinedNormals = new Vector3[meshA.normals.Length + meshB.normals.Length];
-        meshA.normals.CopyTo(combinedNormals, 0);
-        meshB.normals.CopyTo(combinedNormals, meshB.normals.Length);
-        combinedMesh.normals = combinedNormals;
-
         int[] combinedTriangles = new int[meshA.triangles.Length + meshB.triangles.Length];
-        meshA.triangles.CopyTo(combinedTriangles, 0);
-        meshB.triangles.CopyTo(combinedTriangles, meshB.triangles.Length);
+        for (int i = 0; i < meshA.triangles.Length; i++)
+        {
+            combinedTriangles[i] = meshA.triangles[i];
+            Debug.Log($"Triangle A: { meshA.triangles[i]}");
+        }
+        for (int i = 0; i < meshB.triangles.Length; i++)
+        {
+            combinedTriangles[meshA.triangles.Length + i] = meshB.triangles[i] + meshA.vertexCount;
+            Debug.Log($"Triangle B: {meshB.triangles[i]}");
+        }
         combinedMesh.triangles = combinedTriangles;
 
         combinedMesh.RecalculateNormals();
         combinedMesh.RecalculateBounds();
+        Debug.Log("Volume: " + combinedMesh.bounds.size.x * combinedMesh.bounds.size.y * combinedMesh.bounds.size.z);
 
         return combinedMesh;
+    }
+
+    public static Mesh SeparateMeshes(Mesh meshA, float distance)
+    {
+        Mesh separatedMesh = new Mesh();
+        Vector3[] separatedVertices = meshA.vertices;
+        for (int i=0; i<meshA.vertices.Length; i++)
+        {
+            separatedVertices[i] = new Vector3(meshA.vertices[i].x , meshA.vertices[i].y , distance);
+        }
+        separatedMesh.vertices = separatedVertices;
+        separatedMesh.triangles = meshA.triangles;
+
+        separatedMesh.RecalculateNormals();
+        separatedMesh.RecalculateBounds();
+
+        return separatedMesh;
     }
 }

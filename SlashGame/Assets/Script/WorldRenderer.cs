@@ -54,10 +54,11 @@ public class WorldRenderer : MonoBehaviour
         MainSlideFigure = new SlideFigure(poligon);
 	    lineRendererObject = Instantiate(MainLineRendererPrefab, Vector3.zero, Quaternion.identity);//CreateSlideFigureObject(poligon);
         GameObject LineRendererObject = Instantiate(MainLineRendererPrefab, Vector3.zero, Quaternion.identity);
-	    /*LineRenderer lineRenderer = MainLineRendererPrefab.GetComponent<LineRenderer>();
+	    LineRendererObject.AddComponent<MeshFilter>();
+        /*LineRenderer lineRenderer = MainLineRendererPrefab.GetComponent<LineRenderer>();
         poligonMesh.SetPoligonOutline(lineRenderer);
         lineRenderer = poligonMesh.GetPoligonOutline();*/
-	    LineRendererObject.GetComponent<MeshFilter>().mesh = PoligonMesh.GetPoligonMesh(poligon);
+        LineRendererObject.GetComponent<MeshFilter>().mesh = PoligonMesh.GetPoligonMesh(poligon);
 	    lineRendererObject = LineRendererObject;
 
 	}
@@ -148,10 +149,13 @@ public class WorldRenderer : MonoBehaviour
     {
         //Render the poligon outline
         GameObject LineRendererObject = Instantiate(MainLineRendererPrefab, Vector3.zero, Quaternion.identity);
+        LineRendererObject.AddComponent<MeshFilter>();
+        LineRendererObject.AddComponent<MeshRenderer>();
         /*LineRenderer lineRenderer = MainLineRendererPrefab.GetComponent<LineRenderer>();
         poligonMesh.SetPoligonOutline(lineRenderer);
         lineRenderer = poligonMesh.GetPoligonOutline();*/
         LineRendererObject.GetComponent<MeshFilter>().mesh = PoligonMesh.GetPoligonMesh(poligon);
+
         return LineRendererObject;
     }
 

@@ -33,20 +33,23 @@ public class SlideFigure
 
     public void CheckIntersection(Segment segment)
     {
-        ArrayList intersectionPoints = _figurePolygon.GetSegmentIntersectionPoints(segment);
-        if (intersectionPoints.Count > 0)
-{
+        ArrayList intersectionPointsList = _figurePolygon.GetSegmentIntersectionPoints(segment);
+        if (intersectionPointsList.Count > 0)
+        {
+            Point intersectionPoints = intersectionPointsList[0] as Point;
             if (!cutter.IsEmpty())
             {
-                Segment cuttingSegment = new Segment(cutter.FirstCutPoint, intersectionPoints[0] as Point);
+                Segment cuttingSegment = new Segment(cutter.FirstCutPoint, intersectionPoints);
                 if (_figurePolygon.IsPointInsidePolygon(cuttingSegment.GetMiddlePoint()))
                 {
-                    cutter.SetCutPoint(intersectionPoints[0] as Point, 0);
+                    int indexSegmentCut = _figurePolygon.GetSegmentIntersectionIndex(intersectionPoints);
+                    cutter.SetCutPoint(intersectionPoints, indexSegmentCut);
                 }
             }
             else
             {
-                cutter.SetCutPoint(intersectionPoints[0] as Point, 0) ;
+                int indexSegmentCut = _figurePolygon.GetSegmentIntersectionIndex(intersectionPoints);
+                cutter.SetCutPoint(intersectionPoints, indexSegmentCut);
             }
 
 
@@ -82,7 +85,6 @@ public class SlideFigure
         Polygon polygonB = new Polygon(ValidatePoligon(secondFigureVertices));
         BigPolygon = polygonA.GetArea() < polygonB.GetArea() ? polygonA : polygonB;
         SmallPolygon = BigPolygon == polygonA ? polygonB : polygonA;
-
     }
 
     /**

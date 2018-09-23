@@ -100,6 +100,20 @@ namespace Assets.Script.Geometry
             return intersectionPointsList;
         }
 
+        public int GetSegmentIntersectionIndex(Point intersectionPoint)
+        {
+            int indexCount = -1;
+            foreach (Segment segmentSide in _polygonSides)
+            {
+                indexCount++;
+                if (segmentSide.IsSegmentCut() && segmentSide.ContainsPoint(intersectionPoint))
+                {
+                    return indexCount;
+                }
+            }
+            return -1;
+        }
+
         public ArrayList GetPolygonVertices()
         { 
             return this._polygonVertices as ArrayList;

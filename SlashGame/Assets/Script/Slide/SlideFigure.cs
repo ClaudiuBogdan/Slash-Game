@@ -20,7 +20,7 @@ public class SlideFigure
         cutter = new Cutter();
     }
 
-    public void resetCutPoints()
+    public void ResetCutPoints()
     {
         cutter.Clear();
         _figurePolygon.ResetCutSegments();
@@ -90,6 +90,9 @@ public class SlideFigure
         Polygon polygonB = new Polygon(ValidatePoligon(secondFigureVertices));
         BigPolygon = polygonA.GetArea() < polygonB.GetArea() ? polygonA : polygonB;
         SmallPolygon = BigPolygon == polygonA ? polygonB : polygonA;
+
+        SetPolygon(this.BigPolygon);
+        ResetCutPoints();
     }
 
     /**

@@ -66,30 +66,25 @@ namespace Assets.Script
 	
         // Update is called once per frame
         void Update () {
-            if (isFingerTouchFirstTime())
+            if (IsFingerTouchFirstTime())
             {
-                //Debug.Log("Touched first time");
                 firstSegmentPoint = new Point(GetMousePositionToWorld().x, GetMousePositionToWorld().y);
-
             }
-            if (isScreenTouched())
+            if (IsScreenTouched())
             {
-                //Debug.Log(GetMousePositionToWorld());
-                //Debug.Log("Touching...");
                 DetectFigureCut();
             }
 
-            if (isFingerRelease())
+            if (IsFingerRelease())
             {
-                // Debug.Log("Release touch");
-                //firstSegmentPoint = null;
                 CleanSlideFigure();
-
             }
-
             DeleteCutFigureElement();
         }
 
+        /**
+         * Method that eliminates the falling parts.
+         */
         private void DeleteCutFigureElement()
         {
             float lowestDistance = -20f;
@@ -110,14 +105,15 @@ namespace Assets.Script
 
         private void CleanSlideFigure()
         {
-            MainSlideFigure.resetCutPoints();
+            MainSlideFigure.ResetCutPoints();
         }
 
         private void DetectFigureCut()
         {
             Point detectedPoint = new Point(GetMousePositionToWorld().x, GetMousePositionToWorld().y);
-            if(detectedPoint.Equals(firstSegmentPoint))
+            if(detectedPoint.Equals(firstSegmentPoint)) //If the pointer hasn't moved, exit the function.
                 return;
+
             secondSegmentPoint = firstSegmentPoint;
             firstSegmentPoint = detectedPoint;
         
@@ -127,45 +123,49 @@ namespace Assets.Script
             if (MainSlideFigure.isReadyToCut())
             {
                 MainSlideFigure.CutFigure();
-
-                GameObject.Destroy(lineRendererObject);
-                lineRendererObject = CreateSlideFigureObject(MainSlideFigure.BigPolygon);
-                GameObject secondFig = CreateSlideFigureObject(MainSlideFigure.SmallPolygon);
+                GameObject.Destroy(lineRendererObject); //Destroy the old gameObject figure
+                lineRendererObject = CreateSlideFigureObject(MainSlideFigure.BigPolygon); //Create a new gameObject figure with the new polygon.
+                GameObject secondFig = CreateSlideFigureObject(MainSlideFigure.SmallPolygon); 
                 CutSlideFigureList.Add(secondFig);
-                secondFig.GetComponent<Rigidbody>().useGravity = true;
-                secondFig.GetComponent<MeshCollider>().sharedMesh = secondFig.GetComponent<MeshFilter>().mesh;
-                secondFig.GetComponent<Rigidbody>().ResetCenterOfMass();
-                secondFig.GetComponent<Rigidbody>().AddForceAtPosition(MainSlideFigure.GetForceDirection(), MainSlideFigure.GetForceApplicationPoint(),ForceMode.Impulse);
-
-                MainSlideFigure.SetPolygon(MainSlideFigure.BigPolygon);
-                CleanSlideFigure();
+                ConfigFallingFigure(secondFig);
             }
         }
 
-        private bool isFingerTouchFirstTime()
+        private bool IsFingerTouchFirstTime()
         {
             return Input.GetMouseButtonDown(0);
         }
 
-        private bool isFingerRelease()
+        private bool IsFingerRelease()
         {
             return Input.GetMouseButtonUp(0);
         }
 
-        private bool isScreenTouched()
+        private bool IsScreenTouched()
         {
             return Input.GetMouseButton(0);
         }
 
 
+        /**
+         * Method that creates a GameObject with the mesh defined by a polygon.
+         */
         private GameObject CreateSlideFigureObject(Polygon polygon)
         {
-            //Render the polygon outline
+            //Create the polygon GameObject
             GameObject LineRendererObject = Instantiate(MainLineRendererPrefab, Vector3.zero, Quaternion.identity);
             LineRendererObject.AddComponent<MeshFilter>();
             LineRendererObject.GetComponent<MeshFilter>().mesh = PolygonMesh.GetPolygonMesh(polygon);
 
             return LineRendererObject;
+        }
+
+        private void ConfigFallingFigure(GameObject secondFig)
+        {
+            secondFig.GetComponent<Rigidbody>().useGravity = true;
+            secondFig.GetComponent<MeshCollider>().sharedMesh = secondFig.GetComponent<MeshFilter>().mesh;
+            secondFig.GetComponent<Rigidbody>().ResetCenterOfMass();
+            secondFig.GetComponent<Rigidbody>().AddForceAtPosition(MainSlideFigure.GetForceDirection(), MainSlideFigure.GetForceApplicationPoint(), ForceMode.Impulse);
         }
 
         private Vector3 GetMousePositionToWorld()

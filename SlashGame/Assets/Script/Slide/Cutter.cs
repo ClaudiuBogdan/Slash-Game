@@ -35,6 +35,16 @@ namespace Assets.Script.Slide
             }
         }
 
+        public int GetLeastIndexCut()
+        {
+            return IndexSegmentFirstCut < IndexSegmentSecondCut ? IndexSegmentFirstCut : IndexSegmentSecondCut;
+        }
+
+        public int GetLargestIndexCut()
+        {
+            return IndexSegmentFirstCut > IndexSegmentSecondCut ? IndexSegmentFirstCut : IndexSegmentSecondCut;
+        }
+
         public Point GetFirstIndexCutPoint()
         {
             return IndexSegmentFirstCut < IndexSegmentSecondCut ? FirstCutPoint : SecondCutPoint;

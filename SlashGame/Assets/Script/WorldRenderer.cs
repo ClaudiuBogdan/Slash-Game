@@ -11,6 +11,7 @@ public class WorldRenderer : MonoBehaviour
     private GameObject lineRendererObject;
 
     private SlideFigure MainSlideFigure;
+    private ArrayList CutSlideFigureList;
     private Point firstSegmentPoint;
     private Point secondSegmentPoint;
 
@@ -61,35 +62,56 @@ public class WorldRenderer : MonoBehaviour
         LineRendererObject.GetComponent<MeshFilter>().mesh = PoligonMesh.GetPoligonMesh(poligon);
 	    lineRendererObject = LineRendererObject;
 
+        CutSlideFigureList = new ArrayList();
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
+	    if (isFingerTouchFirstTime())
+	    {
+	        //Debug.Log("Touched first time");
+	        firstSegmentPoint = new Point(GetMousePositionToWorld().x, GetMousePositionToWorld().y);
 
+	    }
+	    if (isScreenTouched())
+	    {
+	        //Debug.Log(GetMousePositionToWorld());
+	        //Debug.Log("Touching...");
+	        DetectFigureCut();
+	    }
+
+	    if (isFingerRelease())
+	    {
+	        // Debug.Log("Release touch");
+	        //firstSegmentPoint = null;
+	        CleanSlideFigure();
+
+	    }
+
+	    DeleteCutFigureElement();
 	}
+
+    private void DeleteCutFigureElement()
+    {
+        float lowestDistance = -10f;
+        if (CutSlideFigureList.Count > 0)
+        {
+            for (int i = CutSlideFigureList.Count - 1; i >= 0; i--)
+            {
+                GameObject cutFigureObject = CutSlideFigureList[i] as GameObject;
+                if (cutFigureObject.transform.position.y < lowestDistance)
+                {
+                    GameObject.Destroy(cutFigureObject);
+                    CutSlideFigureList.Remove(cutFigureObject);
+                }
+            }
+        }
+    }
 
     void FixedUpdate()
     {
-        if (isFingerTouchFirstTime())
-        {
-            //Debug.Log("Touched first time");
-            firstSegmentPoint = new Point(GetMousePositionToWorld().x, GetMousePositionToWorld().y);
 
-        }
-        if (isScreenTouched())
-        {
-            //Debug.Log(GetMousePositionToWorld());
-            //Debug.Log("Touching...");
-            DetectFigureCut();
-        }
-
-        if (isFingerRelease())
-        {
-            // Debug.Log("Release touch");
-            //firstSegmentPoint = null;
-            CleanSlideFigure();
-
-        }
     }
 
     private void CleanSlideFigure()
@@ -119,6 +141,7 @@ public class WorldRenderer : MonoBehaviour
             GameObject.Destroy(lineRendererObject);
             lineRendererObject = CreateSlideFigureObject(MainSlideFigure.BigPolygon);
             GameObject secondFig = CreateSlideFigureObject(MainSlideFigure.SmallPolygon);
+            CutSlideFigureList.Add(secondFig);
             secondFig.GetComponent<Rigidbody>().useGravity = true;
             //secondFig.GetComponent<Rigidbody>().AddForce(MainSlideFigure.GetForceDirection(), ForceMode.Impulse);
             secondFig.GetComponent<MeshCollider>().sharedMesh = secondFig.GetComponent<MeshFilter>().mesh;

@@ -19,7 +19,7 @@ public class WorldRenderer : MonoBehaviour
 	void Start () {
         //MainCamera = GameObject.Find("MainCamera");
 
-        /*		//Create a poligon
+        /*		//Create a polygon
                 ArrayList poligonVertices = new ArrayList(new Point[]{new Point(-1, 1), new Point(1, 1), new Point(1, -1), new Point(-1, -1) });*/
 
 	    ArrayList poligonVertices = new ArrayList();
@@ -50,16 +50,16 @@ public class WorldRenderer : MonoBehaviour
 	        poligonVertices.Add(new Point(corner.x, corner.y));
 	    }
 
-    Poligon poligon = new Poligon(poligonVertices);
-	    Debug.Log(poligon);
-        MainSlideFigure = new SlideFigure(poligon);
-	    lineRendererObject = Instantiate(MainLineRendererPrefab, Vector3.zero, Quaternion.identity);//CreateSlideFigureObject(poligon);
+    Polygon polygon = new Polygon(poligonVertices);
+	    Debug.Log(polygon);
+        MainSlideFigure = new SlideFigure(polygon);
+	    lineRendererObject = Instantiate(MainLineRendererPrefab, Vector3.zero, Quaternion.identity);//CreateSlideFigureObject(polygon);
         GameObject LineRendererObject = Instantiate(MainLineRendererPrefab, Vector3.zero, Quaternion.identity);
 	    LineRendererObject.AddComponent<MeshFilter>();
         /*LineRenderer lineRenderer = MainLineRendererPrefab.GetComponent<LineRenderer>();
         poligonMesh.SetPoligonOutline(lineRenderer);
         lineRenderer = poligonMesh.GetPoligonOutline();*/
-        LineRendererObject.GetComponent<MeshFilter>().mesh = PoligonMesh.GetPoligonMesh(poligon);
+        LineRendererObject.GetComponent<MeshFilter>().mesh = PolygonMesh.GetPolygonMesh(polygon);
 	    lineRendererObject = LineRendererObject;
 
         CutSlideFigureList = new ArrayList();
@@ -128,7 +128,7 @@ public class WorldRenderer : MonoBehaviour
         firstSegmentPoint = detectedPoint;
         /*Debug.Log("First point: " + firstSegmentPoint);
         Debug.Log("Second point: " + secondSegmentPoint);*/
-        //Debug.Log("Poligon mesh: " + MainSlideFigure.GetPoligon());
+        //Debug.Log("Polygon mesh: " + MainSlideFigure.GetPoligon());
         
         Segment segment = new Segment(firstSegmentPoint, secondSegmentPoint);
         MainSlideFigure.CheckIntersection(segment);
@@ -168,16 +168,16 @@ public class WorldRenderer : MonoBehaviour
     }
 
 
-    private GameObject CreateSlideFigureObject(Poligon poligon)
+    private GameObject CreateSlideFigureObject(Polygon polygon)
     {
-        //Render the poligon outline
+        //Render the polygon outline
         GameObject LineRendererObject = Instantiate(MainLineRendererPrefab, Vector3.zero, Quaternion.identity);
         LineRendererObject.AddComponent<MeshFilter>();
         LineRendererObject.AddComponent<MeshRenderer>();
         /*LineRenderer lineRenderer = MainLineRendererPrefab.GetComponent<LineRenderer>();
         poligonMesh.SetPoligonOutline(lineRenderer);
         lineRenderer = poligonMesh.GetPoligonOutline();*/
-        LineRendererObject.GetComponent<MeshFilter>().mesh = PoligonMesh.GetPoligonMesh(poligon);
+        LineRendererObject.GetComponent<MeshFilter>().mesh = PolygonMesh.GetPolygonMesh(polygon);
 
         return LineRendererObject;
     }

@@ -4,25 +4,25 @@ using UnityEngine;
 
 namespace Assets.Script.Geometry
 {
-    public class Poligon
+    public class Polygon
     {
 
         private ArrayList poligonVertices;
         private ArrayList poligonSides;
         private ArrayList poligonTriangles;
 
-        public Poligon(ArrayList poligonVertices)
+        public Polygon(ArrayList poligonVertices)
         {
             //Trow exeption if verices length is less than 3;
             if(poligonVertices.Count < 3)
                 return;
             this.poligonVertices = poligonVertices;
             SetPoligonSides(poligonVertices);
-            SetPoligonTriangles(poligonVertices);
+            SetPolygonTriangles(poligonVertices);
         }
 
         //Vertices must be ordered and size grater than 2
-        private void SetPoligonTriangles(ArrayList verticesList)
+        private void SetPolygonTriangles(ArrayList verticesList)
         { 
             Point lateralPointA = verticesList[0] as Point;
             Point centerPoint = verticesList[2] as Point;
@@ -85,7 +85,7 @@ namespace Assets.Script.Geometry
             return intersectionPointsList;
         }
 
-        public ArrayList GetPoligonVertices()
+        public ArrayList GetPolygonVertices()
         { 
             return this.poligonVertices as ArrayList;
         }
@@ -93,7 +93,7 @@ namespace Assets.Script.Geometry
         public Vector3[] GetPoligonVerticesAsVectors()
         {
             ArrayList verticesList = new ArrayList();
-            foreach (Point poligonVertex in this.GetPoligonVertices())
+            foreach (Point poligonVertex in this.GetPolygonVertices())
             {
                 Vector3 verticeVector = new Vector3(poligonVertex.x, poligonVertex.y, 0);
                 verticesList.Add(verticeVector);
@@ -112,14 +112,14 @@ namespace Assets.Script.Geometry
             }
         }
 
-        public ArrayList GetPoligonSides()
+        public ArrayList GetPolygonSides()
         {
             return this.poligonSides;
         }
 
         public float GetArea()
         {
-            Point[] m_points = this.GetPoligonVerticesAsPointArray();
+            Point[] m_points = this.GetPolygonVerticesAsPointArray();
             int n = m_points.Length;
             float A = 0.0f;
             for (int p = n - 1, q = 0; q < n; p = q++)
@@ -131,9 +131,9 @@ namespace Assets.Script.Geometry
             return (A * 0.5f);
         }
 
-        private Point[] GetPoligonVerticesAsPointArray()
+        private Point[] GetPolygonVerticesAsPointArray()
         {
-            return this.GetPoligonVertices().ToArray(typeof(Point)) as Point[];
+            return this.GetPolygonVertices().ToArray(typeof(Point)) as Point[];
         }
 
         public override string ToString()

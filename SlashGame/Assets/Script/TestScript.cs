@@ -16,7 +16,7 @@ namespace Assets.Script
 
         private void TestPoligonFigure()
         {
-            //Poligon points 
+            //Polygon points 
             Point A = new Point(-6.5f, 0);
             Point B = new Point(0, 6.5f);
             Point C = new Point(6.5f, 0);
@@ -28,11 +28,11 @@ namespace Assets.Script
 
             ArrayList poligonVertices = new ArrayList();
             poligonVertices.Add(A); poligonVertices.Add(B); poligonVertices.Add(C); poligonVertices.Add(D);
-            Poligon poligonFigure = new Poligon(poligonVertices);
+            Polygon polygonFigure = new Polygon(poligonVertices);
 
             Segment segmentA = new Segment(E, F);
 
-            ArrayList intersectionPoints = poligonFigure.GetSegmentIntersectionPoints(segmentA);
+            ArrayList intersectionPoints = polygonFigure.GetSegmentIntersectionPoints(segmentA);
             foreach (Point point in intersectionPoints)
             {
                 Debug.Log("Intersection point: " + point);

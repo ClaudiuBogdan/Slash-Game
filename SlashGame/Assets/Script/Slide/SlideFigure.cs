@@ -7,22 +7,22 @@ using UnityEngine;
 public class SlideFigure
 {
 
-    private Poligon figurePoligon;
+    private Polygon _figurePolygon;
     private ArrayList figureCutPoints;
 
-    public Poligon BigPolygon;
-    public Poligon SmallPolygon;
+    public Polygon BigPolygon;
+    public Polygon SmallPolygon;
 
-    public SlideFigure(Poligon poligon)
+    public SlideFigure(Polygon polygon)
     {
-        this.figurePoligon = poligon;
+        this._figurePolygon = polygon;
         this.figureCutPoints = new ArrayList();
     }
 
     public void resetCutPoints()
     {
         figureCutPoints.Clear();
-        figurePoligon.ResetCutSegments();
+        _figurePolygon.ResetCutSegments();
     }
 
     public Boolean isReadyToCut()
@@ -32,7 +32,7 @@ public class SlideFigure
 
     public void CheckIntersection(Segment segment)
     {
-        ArrayList intersectionPoints = figurePoligon.GetSegmentIntersectionPoints(segment);
+        ArrayList intersectionPoints = _figurePolygon.GetSegmentIntersectionPoints(segment);
         if (intersectionPoints.Count > 0)
         {
             figureCutPoints.Add(intersectionPoints[0]);
@@ -42,8 +42,8 @@ public class SlideFigure
 
     public void CutFigure()
     {
-        ArrayList poligonSides = figurePoligon.GetPoligonSides();
-        ArrayList poligonVertices = figurePoligon.GetPoligonVertices();
+        ArrayList poligonSides = _figurePolygon.GetPolygonSides();
+        ArrayList poligonVertices = _figurePolygon.GetPolygonVertices();
         Point firstCutPoint = null;
         ArrayList firstFigureVertices = new ArrayList();
         ArrayList secondFigureVertices = new ArrayList();
@@ -65,10 +65,10 @@ public class SlideFigure
                 containerFigureVertices.Add(cutPoint);
             }
         }
-        Poligon poligonA  = new Poligon(ValidatePoligon(firstFigureVertices));
-        Poligon poligonB = new Poligon(ValidatePoligon(secondFigureVertices));
-        BigPolygon = poligonA.GetArea() < poligonB.GetArea() ? poligonA : poligonB;
-        SmallPolygon = BigPolygon == poligonA ? poligonB : poligonA;
+        Polygon polygonA  = new Polygon(ValidatePoligon(firstFigureVertices));
+        Polygon polygonB = new Polygon(ValidatePoligon(secondFigureVertices));
+        BigPolygon = polygonA.GetArea() < polygonB.GetArea() ? polygonA : polygonB;
+        SmallPolygon = BigPolygon == polygonA ? polygonB : polygonA;
 
     }
 
@@ -110,14 +110,14 @@ public class SlideFigure
         return validatedPolygonVertices;
     }
 
-    public Poligon GetPoligon()
+    public Polygon GetPoligon()
     {
-        return this.figurePoligon;
+        return this._figurePolygon;
     }
 
-    public void setPoligo(Poligon poligon)
+    public void setPoligo(Polygon polygon)
     {
-        this.figurePoligon = poligon;
+        this._figurePolygon = polygon;
     }
 
 

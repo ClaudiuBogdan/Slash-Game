@@ -92,7 +92,6 @@ public class SlideFigure
         SmallPolygon = BigPolygon == polygonA ? polygonB : polygonA;
 
         SetPolygon(this.BigPolygon);
-        ResetCutPoints();
     }
 
     /**

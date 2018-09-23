@@ -128,6 +128,7 @@ namespace Assets.Script
                 GameObject secondFig = CreateSlideFigureObject(MainSlideFigure.SmallPolygon); 
                 CutSlideFigureList.Add(secondFig);
                 ConfigFallingFigure(secondFig);
+                CleanSlideFigure();
             }
         }
 

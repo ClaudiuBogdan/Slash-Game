@@ -146,7 +146,7 @@ public class SlideFigure
 
     public Vector3 GetForceDirection()
     {
-        Vector3 tangencialDirection = new Vector3(cutter.SecondCutPoint.x - cutter.FirstCutPoint.x, cutter.SecondCutPoint.y - cutter.FirstCutPoint.y, 15);
+        Vector3 tangencialDirection = new Vector3(cutter.SecondCutPoint.x - cutter.FirstCutPoint.x, cutter.SecondCutPoint.y - cutter.FirstCutPoint.y, 40);
         Vector3 normalDirection = Vector3.Cross(Vector3.back, tangencialDirection);
         return  - tangencialDirection.normalized * 5;
     }

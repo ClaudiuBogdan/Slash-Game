@@ -93,8 +93,8 @@ public class PoligonMesh
         msh.RecalculateBounds();
 
         Mesh invMsh = InvertMesh(msh);
-        Mesh sepMsh = SeparateMeshes(msh, -10f);
-        Mesh lateralMesh = GenerateLateralMesh(poligonFig, -10f);
+        Mesh sepMsh = SeparateMeshes(msh, -2f);
+        Mesh lateralMesh = GenerateLateralMesh(poligonFig, -2f);
         Mesh facesMsh = CombineMeshes(invMsh, sepMsh);
         Mesh finalMsh = CombineMeshes(lateralMesh, facesMsh);
         return finalMsh;

@@ -76,18 +76,15 @@ namespace Assets.Script.Geometry
             for (int i = 0; i < meshA.triangles.Length; i++)
             {
                 combinedTriangles[i] = meshA.triangles[i];
-                Debug.Log($"Triangle A: { meshA.triangles[i]}");
             }
             for (int i = 0; i < meshB.triangles.Length; i++)
             {
                 combinedTriangles[meshA.triangles.Length + i] = meshB.triangles[i] + meshA.vertexCount;
-                Debug.Log($"Triangle B: {meshB.triangles[i]}");
             }
             combinedMesh.triangles = combinedTriangles;
 
             combinedMesh.RecalculateNormals();
             combinedMesh.RecalculateBounds();
-            Debug.Log("Volume: " + combinedMesh.bounds.size.x * combinedMesh.bounds.size.y * combinedMesh.bounds.size.z);
 
             return combinedMesh;
         }

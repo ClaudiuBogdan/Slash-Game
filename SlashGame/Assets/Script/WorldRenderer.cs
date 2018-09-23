@@ -173,10 +173,6 @@ public class WorldRenderer : MonoBehaviour
         //Render the polygon outline
         GameObject LineRendererObject = Instantiate(MainLineRendererPrefab, Vector3.zero, Quaternion.identity);
         LineRendererObject.AddComponent<MeshFilter>();
-        LineRendererObject.AddComponent<MeshRenderer>();
-        /*LineRenderer lineRenderer = MainLineRendererPrefab.GetComponent<LineRenderer>();
-        poligonMesh.SetPoligonOutline(lineRenderer);
-        lineRenderer = poligonMesh.GetPoligonOutline();*/
         LineRendererObject.GetComponent<MeshFilter>().mesh = PolygonMesh.GetPolygonMesh(polygon);
 
         return LineRendererObject;

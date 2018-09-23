@@ -40,7 +40,7 @@ public class SlideFigure
             {
                 Debug.Log($"2 Intersection point: {((Point)intersectionPoints[0])}, arrLength: {figureCutPoints.Count}");
                 Segment cuttingSegment = new Segment(figureCutPoints[0] as Point, intersectionPoints[0] as Point);
-                if (/*true ||*/_figurePolygon.IsPointInsidePolygon(cuttingSegment.GetMiddlePoint()))
+                if (_figurePolygon.IsPointInsidePolygon(cuttingSegment.GetMiddlePoint()))
                 {
                     figureCutPoints.Add(intersectionPoints[0]);
                 }
@@ -57,6 +57,8 @@ public class SlideFigure
 
     public void CutFigure()
     {
+        Debug.Log($"Cut point 1: {figureCutPoints[0] as Point}");
+        Debug.Log($"Cut point 2: {figureCutPoints[1] as Point}");
         ArrayList poligonSides = _figurePolygon.GetPolygonSides();
         ArrayList poligonVertices = _figurePolygon.GetPolygonVertices();
         Point firstCutPoint = null;

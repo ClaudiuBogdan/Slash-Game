@@ -41,29 +41,29 @@ namespace Assets.Script.Geometry
         {
             if (pointX == null)
                 return false;
-
+            float errorEpsillon = Point.epsiloError * 10;
             bool isContained = false;
             //Check if the points are in the same line
             Vector3 vect1 = new Vector3(pointX.x - pointA.x, pointX.y - pointA.y, 0);
             Vector3 vect2 = new Vector3(pointX.x - pointB.x, pointX.y - pointB.y, 0);
             //Debug.Log("Angle points of line: " + Math.Abs(Vector3.Angle(vect1, vect2)));
-            if (Math.Abs(Vector3.Angle(vect1, vect2)) > 180 - Point.epsiloError)
+            if (Math.Abs(Vector3.Angle(vect1, vect2)) > 180 - errorEpsillon)
             {
                 Point leftPoint = pointA.x > pointB.x ? pointB : pointA;
                 Point rightPoint = leftPoint == pointA ? pointB : pointA;
                 if (rightPoint.y > leftPoint.y)
                     {
                         isContained =
-                            ((leftPoint.x <= pointX.x && rightPoint.x >= pointX.x) &&
-                             (leftPoint.y <= pointX.y && rightPoint.y >= pointX.y))
+                            ((leftPoint.x - errorEpsillon <= pointX.x && rightPoint.x + errorEpsillon >= pointX.x) &&
+                             (leftPoint.y - errorEpsillon <= pointX.y && rightPoint.y + errorEpsillon >= pointX.y))
                                 ? true
                                 : false;
                     }
                     else
                     {
                         isContained =
-                            ((leftPoint.x <= pointX.x && rightPoint.x >= pointX.x) &&
-                             (leftPoint.y >= pointX.y && rightPoint.y <= pointX.y))
+                            ((leftPoint.x - errorEpsillon <= pointX.x && rightPoint.x + errorEpsillon >= pointX.x) &&
+                             (leftPoint.y + errorEpsillon >= pointX.y && rightPoint.y - errorEpsillon <= pointX.y))
                                 ? true
                                 : false;
                     }

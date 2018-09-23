@@ -93,8 +93,10 @@ public class PoligonMesh
         msh.RecalculateBounds();
 
         Mesh invMsh = InvertMesh(msh);
-        Mesh sepMsh = SeparateMeshes(msh, -0.0001f);
-        Mesh finalMsh = CombineMeshes(invMsh, sepMsh);
+        Mesh sepMsh = SeparateMeshes(msh, -10f);
+        Mesh lateralMesh = GenerateLateralMesh(poligonFig, -10f);
+        Mesh facesMsh = CombineMeshes(invMsh, sepMsh);
+        Mesh finalMsh = CombineMeshes(lateralMesh, facesMsh);
         return finalMsh;
     }
 
@@ -158,7 +160,7 @@ public class PoligonMesh
 
         Vector3[] combinedVertices = new Vector3[meshA.vertexCount + meshB.vertexCount];
         meshA.vertices.CopyTo(combinedVertices, 0);
-        meshB.vertices.CopyTo(combinedVertices, meshB.vertexCount);
+        meshB.vertices.CopyTo(combinedVertices, meshA.vertexCount);
         combinedMesh.vertices = combinedVertices;
 
         int[] combinedTriangles = new int[meshA.triangles.Length + meshB.triangles.Length];
@@ -196,5 +198,57 @@ public class PoligonMesh
         separatedMesh.RecalculateBounds();
 
         return separatedMesh;
+    }
+
+    /**
+     * Method that generate the lateral mesh to a 3D figure.
+     * meshA and meshB must have the same vertices count
+     */
+    public static Mesh GenerateLateralMesh(Poligon poligon, float distance)
+    {
+        Mesh lateralMesh  = new Mesh();
+        Vector3[] poligonVertices = poligon.GetPoligonVerticesAsVectors();
+
+        int verticesPerFace = 4;
+        //Lateral vertices
+        Vector3[] lateralVertices = new Vector3[poligonVertices.Length  * verticesPerFace];
+        for (int i = 0; i < lateralVertices.Length; i = i + verticesPerFace)
+        {
+            lateralVertices[i] = poligonVertices[ i/ verticesPerFace];
+            lateralVertices[i + 1] = poligonVertices[ i / verticesPerFace] + new Vector3(0,0, distance);
+            lateralVertices[i + 2] = poligonVertices[1 + i / verticesPerFace < poligonVertices.Length ? 1 + i / verticesPerFace : 0];
+            lateralVertices[i + 3] = poligonVertices[1 + i / verticesPerFace < poligonVertices.Length ? 1 + i / verticesPerFace : 0] + new Vector3(0, 0, distance);
+        }
+        lateralMesh.vertices = lateralVertices;
+
+        //Lateral mesh
+        int triangleVerticesPerLateralFAce = 2 * 3; //Two triangles with 3 vertices each one
+        int[] lateralTriangles = new int[poligonVertices.Length * triangleVerticesPerLateralFAce];
+        for (int i = 0; i < poligonVertices.Length * triangleVerticesPerLateralFAce ; i = i + triangleVerticesPerLateralFAce)
+        {
+            //Two triangle that form a rectangle
+            lateralTriangles[i] = verticesPerFace*i / triangleVerticesPerLateralFAce;
+            lateralTriangles[i + 1] = 3 + verticesPerFace * ( i / triangleVerticesPerLateralFAce);
+            lateralTriangles[i + 2] = 1 + verticesPerFace * ( i / triangleVerticesPerLateralFAce);
+
+            lateralTriangles[i + 3] = verticesPerFace*(i / triangleVerticesPerLateralFAce);
+            lateralTriangles[i + 4] = 2 + verticesPerFace * ( i / triangleVerticesPerLateralFAce);
+            lateralTriangles[i + 5] = 3 + verticesPerFace * ( i / triangleVerticesPerLateralFAce);
+        }
+        lateralMesh.triangles = lateralTriangles;
+
+        lateralMesh.RecalculateNormals();
+        lateralMesh.RecalculateBounds();
+        /*Vector3[] lateralMeshNormals = lateralMesh.normals;
+        int indexCount = 0;
+        foreach (Vector3 meshNormal in lateralMeshNormals)
+        {
+            lateralMeshNormals[indexCount] = -meshNormal;
+            indexCount++;
+        }
+        lateralMesh.normals = lateralMeshNormals;
+*/
+
+        return lateralMesh;
     }
 }

@@ -182,11 +182,6 @@ namespace Assets.Script.Geometry
         {
             String str = "";
             int count = 0;
-            /*foreach (Point vertex in polygonVertices)
-            {
-                str += "Vertex " + count + " : " + vertex.ToString();
-                count++;
-            }*/
             foreach (Segment side in _polygonSides)
             {
                 str += "Side " + count + " : " + side;

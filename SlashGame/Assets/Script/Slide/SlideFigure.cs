@@ -34,24 +34,22 @@ public class SlideFigure
     {
         ArrayList intersectionPoints = _figurePolygon.GetSegmentIntersectionPoints(segment);
         if (intersectionPoints.Count > 0)
-        {
-            figureCutPoints.Add(intersectionPoints[0]);
-/*            Debug.Log($"Intersection point: {((Point)intersectionPoints[0])}, arrLength: {intersectionPoints.Count}");
-            if (figureCutPoints.Count == 1)
+{
+            Debug.Log($"0 Intersection point: {((Point)intersectionPoints[0])}, arrLength: {figureCutPoints.Count}");
+            if (figureCutPoints.Count > 0)
             {
-                Debug.Log($"Intersection point: {((Point)intersectionPoints[0])}, arrLength: {intersectionPoints.Count}");
+                Debug.Log($"2 Intersection point: {((Point)intersectionPoints[0])}, arrLength: {figureCutPoints.Count}");
                 Segment cuttingSegment = new Segment(figureCutPoints[0] as Point, intersectionPoints[0] as Point);
-                if (true && _figurePolygon.IsPointInsidePolygon(cuttingSegment.GetMiddlePoint()))
+                if (/*true ||*/_figurePolygon.IsPointInsidePolygon(cuttingSegment.GetMiddlePoint()))
                 {
-                    
                     figureCutPoints.Add(intersectionPoints[0]);
                 }
             }
             else
             {
                 figureCutPoints.Add(intersectionPoints[0]);
-                Debug.Log($"Intersection point: {((Point)intersectionPoints[0])}, arrLength: {intersectionPoints.Count}");
-            }*/
+                Debug.Log($"1 Intersection point: {((Point)intersectionPoints[0])}, arrLength: {figureCutPoints.Count}");
+            }
 
 
         }
@@ -141,14 +139,14 @@ public class SlideFigure
 
     public Vector3 GetForceDirection()
     {
-        Vector3 tangencialDirection = new Vector3(((Point)figureCutPoints[1]).x - ((Point)figureCutPoints[0]).x, ((Point)figureCutPoints[1]).y - ((Point)figureCutPoints[0]).y, 5);
+        Vector3 tangencialDirection = new Vector3(((Point)figureCutPoints[1]).x - ((Point)figureCutPoints[0]).x, ((Point)figureCutPoints[1]).y - ((Point)figureCutPoints[0]).y, 15);
         Vector3 normalDirection = Vector3.Cross(Vector3.back, tangencialDirection);
-        return tangencialDirection.normalized * 5;
+        return  - tangencialDirection.normalized * 5;
     }
 
     public Vector3 GetForceApplicationPoint()
     {
-        Point middlPoint = new Point((((Point)figureCutPoints[1]).x - ((Point)figureCutPoints[0]).x)/2.0f, (((Point)figureCutPoints[1]).y - ((Point)figureCutPoints[0]).y)/2.0f);
+        Point middlPoint = new Point((((Point)figureCutPoints[1]).x + ((Point)figureCutPoints[0]).x)/2.0f, (((Point)figureCutPoints[1]).y + ((Point)figureCutPoints[0]).y)/2.0f);
         return new Vector3(middlPoint.x, middlPoint.y, 0);
     }
 }

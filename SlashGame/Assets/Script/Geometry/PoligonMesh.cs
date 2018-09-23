@@ -93,7 +93,7 @@ public class PoligonMesh
         msh.RecalculateBounds();
 
         Mesh invMsh = InvertMesh(msh);
-        Mesh sepMsh = SeparateMeshes(msh, -1);
+        Mesh sepMsh = SeparateMeshes(msh, -0.0001f);
         Mesh finalMsh = CombineMeshes(invMsh, sepMsh);
         return finalMsh;
     }
@@ -145,7 +145,7 @@ public class PoligonMesh
                 meshB.triangles.CopyTo(combinedTriangles, meshB.triangles.Length);
                 combinedMesh.triangles = combinedTriangles;*/
 
-        Vector3[] combinedVertices = new Vector3[meshA.vertexCount + meshB.vertexCount];
+        /*Vector3[] combinedVertices = new Vector3[meshA.vertexCount + meshB.vertexCount];
         for (int i = 0; i < meshA.vertexCount; i++)
         {
             combinedVertices[i] = meshA.vertices[i];
@@ -154,6 +154,11 @@ public class PoligonMesh
         {
             combinedVertices[meshA.vertexCount + i] = meshB.vertices[i];
         }
+        combinedMesh.vertices = combinedVertices;*/
+
+        Vector3[] combinedVertices = new Vector3[meshA.vertexCount + meshB.vertexCount];
+        meshA.vertices.CopyTo(combinedVertices, 0);
+        meshB.vertices.CopyTo(combinedVertices, meshB.vertexCount);
         combinedMesh.vertices = combinedVertices;
 
         int[] combinedTriangles = new int[meshA.triangles.Length + meshB.triangles.Length];

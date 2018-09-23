@@ -1,2 +1,6 @@
 # ToDo list
-1. Delete items after fall.
+
+1. Detect point inside figure.
+
+
+DONE: Delete items after fall.

@@ -18,24 +18,12 @@ namespace Assets.Script.Geometry
     
         public static UnityEngine.Mesh GetPolygonMesh(Polygon polygonFig)
         {
-            // Use the triangulator to get indices for creating triangles
-            Point[] vertices2D = polygonFig.GetPolygonVertices().ToArray(typeof(Point)) as Point[];
-            Triangulator tr = new Triangulator(vertices2D);
-            int[] indices = tr.Triangulate();
-
-            // Create the Vector3 vertices
-            Vector3[] vertices = new Vector3[vertices2D.Length];
-            for (int i = 0; i < vertices.Length; i++)
-            {
-                vertices[i] = new Vector3(vertices2D[i].x, vertices2D[i].y, 0);
-            }
-
             float separationBetweenFaces = 0.5f;
 
             // Create the mesh
             UnityEngine.Mesh msh = new UnityEngine.Mesh();
-            msh.vertices = vertices;
-            msh.triangles = indices;
+            msh.vertices = polygonFig.verticesMesh;
+            msh.triangles = polygonFig.trianglesIndexVerticesMesh; ;
 
             msh.RecalculateNormals();
             msh.RecalculateBounds();

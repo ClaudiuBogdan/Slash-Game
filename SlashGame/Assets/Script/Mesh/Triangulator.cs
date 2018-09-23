@@ -103,7 +103,7 @@ namespace Assets.Script.Mesh
             return true;
         }
 
-        private bool InsideTriangle(Point A, Point B, Point C, Point P)
+        public static bool InsideTriangle(Point A, Point B, Point C, Point P)
         {
             float ax, ay, bx, by, cx, cy, apx, apy, bpx, bpy, cpx, cpy;
             float cCROSSap, bCROSScp, aCROSSbp;

@@ -147,7 +147,7 @@ public class WorldRenderer : MonoBehaviour
             secondFig.GetComponent<MeshCollider>().sharedMesh = secondFig.GetComponent<MeshFilter>().mesh;
             secondFig.GetComponent<Rigidbody>().ResetCenterOfMass();
             secondFig.GetComponent<Rigidbody>().AddForceAtPosition(MainSlideFigure.GetForceDirection(), MainSlideFigure.GetForceApplicationPoint(),ForceMode.Impulse);
-            MainSlideFigure.setPoligo(MainSlideFigure.BigPolygon);
+            MainSlideFigure.SetPolygon(MainSlideFigure.BigPolygon);
             CleanSlideFigure();
         }
     }

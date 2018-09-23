@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Assets.Script.Mesh;
 using UnityEngine;
 
 namespace Assets.Script.Geometry
@@ -7,40 +8,54 @@ namespace Assets.Script.Geometry
     public class Polygon
     {
 
-        private ArrayList poligonVertices;
-        private ArrayList poligonSides;
-        private ArrayList poligonTriangles;
+        private ArrayList _polygonVertices;
+        private ArrayList _polygonSides;
+        private ArrayList _polygonTriangles;
+        public Vector3[] verticesMesh { get; private set; }
+        public int[] trianglesIndexVerticesMesh { get; private set; }
 
-        public Polygon(ArrayList poligonVertices)
+        public Polygon(ArrayList polygonVertices)
         {
             //Trow exeption if verices length is less than 3;
-            if(poligonVertices.Count < 3)
+            if(polygonVertices.Count < 3)
                 return;
-            this.poligonVertices = poligonVertices;
-            SetPoligonSides(poligonVertices);
-            SetPolygonTriangles(poligonVertices);
+            this._polygonTriangles = new ArrayList();
+            this._polygonVertices = polygonVertices;
+            SetPoligonSides(polygonVertices);
+            SetPolygonTriangles();
         }
 
         //Vertices must be ordered and size grater than 2
-        private void SetPolygonTriangles(ArrayList verticesList)
-        { 
-            Point lateralPointA = verticesList[0] as Point;
-            Point centerPoint = verticesList[2] as Point;
-            Point lateralPointB = verticesList[1] as Point;
-            float angleCenterPoint = GetSegmentsAngle(lateralPointA, centerPoint, lateralPointB);
-        }
-
-        private float GetSegmentsAngle(Point lateralPointA, Point centerPoint, Point lateralPointB)
+        private void SetPolygonTriangles()
         {
-            Vector2 auxSegmentA = new Vector2(lateralPointA.x - centerPoint.x, lateralPointA.y - centerPoint.y);
-            Vector2 auxSegmentB = new Vector2(lateralPointB.x - centerPoint.x, lateralPointB.y - centerPoint.y);
-            return 0;
+            // Use the triangulator to get indices for creating triangles
+            Point[] vertices2D = this.GetPolygonVertices().ToArray(typeof(Point)) as Point[];
+            Triangulator tr = new Triangulator(vertices2D);
+            int[] indices = tr.Triangulate();
 
+            // Create the Vector3 vertices
+            Vector3[] vertices = new Vector3[vertices2D.Length];
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                vertices[i] = new Vector3(vertices2D[i].x, vertices2D[i].y, 0);
+            }
+
+            this.verticesMesh = vertices;
+            this.trianglesIndexVerticesMesh = indices;
+            
+            this._polygonTriangles.Clear();
+            for (int i = 0; i < indices.Length; i = i + 3)
+            {
+                Point pointA = new Point(vertices[indices[i]].x, vertices[indices[i]].y);
+                Point pointB = new Point(vertices[indices[i + 1]].x, vertices[indices[i + 1]].y);
+                Point pointC = new Point(vertices[indices[i + 2]].x, vertices[indices[i + 2]].y);
+                _polygonTriangles.Add(new Triangle(pointA, pointB, pointC));
+            }
         }
 
         private void SetPoligonSides(ArrayList poligonVertices)
         {
-            this.poligonSides = new ArrayList();
+            this._polygonSides = new ArrayList();
             for (int i = 1; i <= poligonVertices.Count; i++)
             {
                 Point pointA;
@@ -64,7 +79,7 @@ namespace Assets.Script.Geometry
                     pointB = poligonVertices[i] as Point;
                 }
                 Segment sideSegment = new Segment(pointA, pointB);
-                this.poligonSides.Add(sideSegment);
+                this._polygonSides.Add(sideSegment);
             }
 
         }
@@ -72,7 +87,7 @@ namespace Assets.Script.Geometry
         public ArrayList GetSegmentIntersectionPoints(Segment segmentA)
         {
             ArrayList intersectionPointsList = new ArrayList();
-            foreach (Segment segmentSide in poligonSides)
+            foreach (Segment segmentSide in _polygonSides)
             {
                 Point intersectionPoint = segmentSide.Intersect(segmentA);
                 if (intersectionPoint != null && !segmentSide.IsSegmentCut())
@@ -87,7 +102,7 @@ namespace Assets.Script.Geometry
 
         public ArrayList GetPolygonVertices()
         { 
-            return this.poligonVertices as ArrayList;
+            return this._polygonVertices as ArrayList;
         }
 
         public Vector3[] GetPoligonVerticesAsVectors()
@@ -98,7 +113,7 @@ namespace Assets.Script.Geometry
                 Vector3 verticeVector = new Vector3(poligonVertex.x, poligonVertex.y, 0);
                 verticesList.Add(verticeVector);
             }
-            Vector3 verticeVectorLast = new Vector3(((Point)poligonVertices[0]).x, ((Point)poligonVertices[0]).y, 0);
+            Vector3 verticeVectorLast = new Vector3(((Point)_polygonVertices[0]).x, ((Point)_polygonVertices[0]).y, 0);
             verticesList.Add(verticeVectorLast);
 
             return verticesList.ToArray(typeof(Vector3)) as Vector3[];
@@ -106,7 +121,7 @@ namespace Assets.Script.Geometry
 
         public void ResetCutSegments()
         {
-            foreach (Segment poligonSide in poligonSides)
+            foreach (Segment poligonSide in _polygonSides)
             {
                 poligonSide.SetIsSegmentCut(false);
             }
@@ -114,7 +129,7 @@ namespace Assets.Script.Geometry
 
         public ArrayList GetPolygonSides()
         {
-            return this.poligonSides;
+            return this._polygonSides;
         }
 
         public float GetArea()
@@ -131,6 +146,19 @@ namespace Assets.Script.Geometry
             return (A * 0.5f);
         }
 
+        public bool IsPointInsidePolygon(Point point)
+        {
+            foreach (Triangle polygonTriangle in _polygonTriangles)
+            {
+                if (!Triangulator.InsideTriangle(polygonTriangle.pointA, polygonTriangle.pointB, polygonTriangle.pointC, point))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+
         private Point[] GetPolygonVerticesAsPointArray()
         {
             return this.GetPolygonVertices().ToArray(typeof(Point)) as Point[];
@@ -140,12 +168,12 @@ namespace Assets.Script.Geometry
         {
             String str = "";
             int count = 0;
-            /*foreach (Point vertex in poligonVertices)
+            /*foreach (Point vertex in polygonVertices)
             {
                 str += "Vertex " + count + " : " + vertex.ToString();
                 count++;
             }*/
-            foreach (Segment side in poligonSides)
+            foreach (Segment side in _polygonSides)
             {
                 str += "Side " + count + " : " + side;
                 count++;

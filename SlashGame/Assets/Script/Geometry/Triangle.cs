@@ -3,9 +3,9 @@
     public class Triangle
     {
 
-        private Point pointA;
-        private Point pointB;
-        private Point pointC;
+        public Point pointA { get; private set; }
+        public Point pointB { get; private set; }
+        public Point pointC { get; private set; }
 
         public Triangle(Point pointA, Point pointB, Point pointC)
         {

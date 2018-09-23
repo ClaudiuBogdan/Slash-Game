@@ -15,7 +15,7 @@ public class SlideFigure
 
     public SlideFigure(Polygon polygon)
     {
-        this._figurePolygon = polygon;
+        SetPolygon(polygon);
         this.figureCutPoints = new ArrayList();
     }
 
@@ -115,7 +115,7 @@ public class SlideFigure
         return this._figurePolygon;
     }
 
-    public void setPoligo(Polygon polygon)
+    public void SetPolygon(Polygon polygon)
     {
         this._figurePolygon = polygon;
     }

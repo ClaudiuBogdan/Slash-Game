@@ -64,8 +64,10 @@ public class SlideFigure
         ArrayList firstFigureVertices = new ArrayList();
         ArrayList secondFigureVertices = new ArrayList();
 
+        firstFigureVertices.Add(cutter.GetFirstIndexCutPoint()); //Start with the fist cut point to form the new figure
         int indexPolygonSide = cutter.GetLeastIndexCut();
-        while (indexPolygonSide != cutter.GetLargestIndexCut())
+        indexPolygonSide = indexPolygonSide + 1 < polygonSides.Count ? indexPolygonSide + 1 : 0;
+        while (indexPolygonSide != cutter.GetLargestIndexCut()) //Stop when reached the second segment cut.
         {
             firstFigureVertices.Add(poligonVertices[indexPolygonSide]);
             indexPolygonSide = indexPolygonSide + 1 < polygonSides.Count ? indexPolygonSide + 1 : 0;
@@ -73,8 +75,10 @@ public class SlideFigure
         firstFigureVertices.Add(poligonVertices[indexPolygonSide]);
         firstFigureVertices.Add(cutter.GetSecondIndexCutPoint());
 
+        secondFigureVertices.Add(cutter.GetSecondIndexCutPoint()); //Start with the second cut point to form the new figure
         indexPolygonSide = cutter.GetLargestIndexCut();
-        while (indexPolygonSide != cutter.GetLeastIndexCut())
+        indexPolygonSide = indexPolygonSide + 1 < polygonSides.Count ? indexPolygonSide + 1 : 0;
+        while (indexPolygonSide != cutter.GetLeastIndexCut()) //Stop when reached the first segment cut.
         {
             secondFigureVertices.Add(poligonVertices[indexPolygonSide]);
             indexPolygonSide = indexPolygonSide + 1 < polygonSides.Count ? indexPolygonSide + 1 : 0;
@@ -82,32 +86,10 @@ public class SlideFigure
         secondFigureVertices.Add(poligonVertices[indexPolygonSide]);
         secondFigureVertices.Add(cutter.GetFirstIndexCutPoint());
 
-        Polygon polygonA = new Polygon(/*ValidatePoligon*/(firstFigureVertices));
-        Polygon polygonB = new Polygon(/*ValidatePoligon*/(secondFigureVertices));
+        Polygon polygonA = new Polygon(ValidatePoligon(firstFigureVertices));
+        Polygon polygonB = new Polygon(ValidatePoligon(secondFigureVertices));
         BigPolygon = polygonA.GetArea() < polygonB.GetArea() ? polygonA : polygonB;
         SmallPolygon = BigPolygon == polygonA ? polygonB : polygonA;
-        /*        ArrayList containerFigureVertices = firstFigureVertices;
-                for (int i = 0; i < poligonSides.Count; i++)
-                { 
-                    containerFigureVertices.Add(poligonVertices[i]);
-                    Segment segment = ((Segment) poligonSides[i]);
-                    if (segment.IsSegmentCut())
-                    {
-                        Point cutPoint = segment.ContainsPoint(cutter.FirstCutPoint)
-                            ? cutter.FirstCutPoint
-                            : cutter.SecondCutPoint;
-                        containerFigureVertices.Add(cutPoint);
-                        //Switch polygon array.
-                        containerFigureVertices = containerFigureVertices == firstFigureVertices
-                            ? secondFigureVertices
-                            : firstFigureVertices;
-                        containerFigureVertices.Add(cutPoint);
-                    }
-                }
-                Polygon polygonA  = new Polygon(ValidatePoligon(firstFigureVertices));
-                Polygon polygonB = new Polygon(ValidatePoligon(secondFigureVertices));
-                BigPolygon = polygonA.GetArea() < polygonB.GetArea() ? polygonA : polygonB;
-                SmallPolygon = BigPolygon == polygonA ? polygonB : polygonA;*/
     }
 
     /**

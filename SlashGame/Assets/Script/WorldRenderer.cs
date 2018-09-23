@@ -50,7 +50,7 @@ public class WorldRenderer : MonoBehaviour
 	        poligonVertices.Add(new Point(corner.x, corner.y));
 	    }
 
-    Polygon polygon = new Polygon(poligonVertices);
+        Polygon polygon = new Polygon(poligonVertices);
 	    Debug.Log(polygon);
         MainSlideFigure = new SlideFigure(polygon);
 	    lineRendererObject = Instantiate(MainLineRendererPrefab, Vector3.zero, Quaternion.identity);//CreateSlideFigureObject(polygon);
@@ -94,7 +94,7 @@ public class WorldRenderer : MonoBehaviour
 
     private void DeleteCutFigureElement()
     {
-        float lowestDistance = -10f;
+        float lowestDistance = -20f;
         if (CutSlideFigureList.Count > 0)
         {
             for (int i = CutSlideFigureList.Count - 1; i >= 0; i--)
@@ -109,10 +109,6 @@ public class WorldRenderer : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
-    {
-
-    }
 
     private void CleanSlideFigure()
     {
@@ -126,27 +122,23 @@ public class WorldRenderer : MonoBehaviour
             return;
         secondSegmentPoint = firstSegmentPoint;
         firstSegmentPoint = detectedPoint;
-        /*Debug.Log("First point: " + firstSegmentPoint);
-        Debug.Log("Second point: " + secondSegmentPoint);*/
-        //Debug.Log("Polygon mesh: " + MainSlideFigure.GetPoligon());
         
         Segment segment = new Segment(firstSegmentPoint, secondSegmentPoint);
         MainSlideFigure.CheckIntersection(segment);
+
         if (MainSlideFigure.isReadyToCut())
         {
             MainSlideFigure.CutFigure();
-            Debug.Log("Figure cut");
-            /*MainSlideFigure.BigPolygon;
-            MainSlideFigure.SmallPolygon;*/
+
             GameObject.Destroy(lineRendererObject);
             lineRendererObject = CreateSlideFigureObject(MainSlideFigure.BigPolygon);
             GameObject secondFig = CreateSlideFigureObject(MainSlideFigure.SmallPolygon);
             CutSlideFigureList.Add(secondFig);
             secondFig.GetComponent<Rigidbody>().useGravity = true;
-            //secondFig.GetComponent<Rigidbody>().AddForce(MainSlideFigure.GetForceDirection(), ForceMode.Impulse);
             secondFig.GetComponent<MeshCollider>().sharedMesh = secondFig.GetComponent<MeshFilter>().mesh;
             secondFig.GetComponent<Rigidbody>().ResetCenterOfMass();
             secondFig.GetComponent<Rigidbody>().AddForceAtPosition(MainSlideFigure.GetForceDirection(), MainSlideFigure.GetForceApplicationPoint(),ForceMode.Impulse);
+
             MainSlideFigure.SetPolygon(MainSlideFigure.BigPolygon);
             CleanSlideFigure();
         }

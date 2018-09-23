@@ -83,6 +83,11 @@ namespace Assets.Script.Geometry
             return this.isCut;
         }
 
+        public Point GetMiddlePoint()
+        {
+            return new Point((pointA.x + pointB.x)/2.0f,(pointA.y + pointB.y)/ 2.0f);
+        }
+
         public override string ToString()
         {
             return $"Segment {pointA} - {pointB}";

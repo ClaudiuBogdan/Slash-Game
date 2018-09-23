@@ -103,9 +103,10 @@ namespace Assets.Script.Mesh
             return true;
         }
 
-        public static bool InsideTriangle(Point A, Point B, Point C, Point P)
+        private bool InsideTriangle(Point A, Point B, Point C, Point P)
         {
-            float ax, ay, bx, by, cx, cy, apx, apy, bpx, bpy, cpx, cpy;
+            return PointInTriangle(A, B, C, P);
+            /*float ax, ay, bx, by, cx, cy, apx, apy, bpx, bpy, cpx, cpy;
             float cCROSSap, bCROSScp, aCROSSbp;
 
             ax = C.x - B.x; ay = C.y - B.y;
@@ -119,7 +120,23 @@ namespace Assets.Script.Mesh
             cCROSSap = cx * apy - cy * apx;
             bCROSScp = bx * cpy - by * cpx;
 
-            return ((aCROSSbp >= 0.0f) && (bCROSScp >= 0.0f) && (cCROSSap >= 0.0f));
+            return ((aCROSSbp >= 0.0f) && (bCROSScp >= 0.0f) && (cCROSSap >= 0.0f));*/
+        }
+
+        public static float sign(Point p1, Point p2, Point p3)
+        {
+            return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);
+        }
+
+        public static bool PointInTriangle(Point v1, Point v2, Point v3, Point pt)
+        {
+            bool b1, b2, b3;
+
+            b1 = sign(pt, v1, v2) < 0.0f;
+            b2 = sign(pt, v2, v3) < 0.0f;
+            b3 = sign(pt, v3, v1) < 0.0f;
+
+            return ((b1 == b2) && (b2 == b3));
         }
     }
 }

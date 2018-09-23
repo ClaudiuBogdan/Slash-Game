@@ -150,7 +150,7 @@ namespace Assets.Script.Geometry
         {
             foreach (Triangle polygonTriangle in _polygonTriangles)
             {
-                if (!Triangulator.InsideTriangle(polygonTriangle.pointA, polygonTriangle.pointB, polygonTriangle.pointC, point))
+                if (!Triangulator.PointInTriangle(polygonTriangle.pointA, polygonTriangle.pointB, polygonTriangle.pointC, point))
                 {
                     return false;
                 }

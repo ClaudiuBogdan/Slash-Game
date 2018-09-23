@@ -36,7 +36,24 @@ public class SlideFigure
         if (intersectionPoints.Count > 0)
         {
             figureCutPoints.Add(intersectionPoints[0]);
-            //Debug.Log($"Intersection point: {((Point)intersectionPoints[0])}, arrLength: {intersectionPoints.Count}");
+/*            Debug.Log($"Intersection point: {((Point)intersectionPoints[0])}, arrLength: {intersectionPoints.Count}");
+            if (figureCutPoints.Count == 1)
+            {
+                Debug.Log($"Intersection point: {((Point)intersectionPoints[0])}, arrLength: {intersectionPoints.Count}");
+                Segment cuttingSegment = new Segment(figureCutPoints[0] as Point, intersectionPoints[0] as Point);
+                if (true && _figurePolygon.IsPointInsidePolygon(cuttingSegment.GetMiddlePoint()))
+                {
+                    
+                    figureCutPoints.Add(intersectionPoints[0]);
+                }
+            }
+            else
+            {
+                figureCutPoints.Add(intersectionPoints[0]);
+                Debug.Log($"Intersection point: {((Point)intersectionPoints[0])}, arrLength: {intersectionPoints.Count}");
+            }*/
+
+
         }
     }
 

@@ -189,5 +189,13 @@ namespace Assets.Script.Geometry
             }
             return str;
         }
+
+        public Vector3 GetPlaneNormal()
+        {
+            Vector3[] verticesVectors = GetPoligonVerticesAsVectors();
+            Vector3 vectorA = verticesVectors[0] - verticesVectors[1]; 
+            Vector3 vectorB = verticesVectors[2] - verticesVectors[1];
+            return Vector3.Cross(vectorA, vectorB);
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Assets.Script.Geometry;
+using Assets.Script.Slide;
 using UnityEngine;
 
 namespace Assets.Script
@@ -8,6 +9,7 @@ namespace Assets.Script
     {
         public GameObject MainLineRendererPrefab;
         public GameObject MainCamera;
+        public GameObject ShurikenPrefab;
 
         private GameObject lineRendererObject;
 
@@ -62,8 +64,15 @@ namespace Assets.Script
 
             CutSlideFigureList = new ArrayList();
 
+            CreateShurikens();
         }
-	
+
+        private void CreateShurikens()
+        {
+            Shuriken shuriken = new Shuriken(new Point(0,0), new Vector3(1, 1, 0), MainSlideFigure.GetPoligon().GetPlaneNormal());
+            GameObject ShurikenGameObject = Instantiate(ShurikenPrefab, shuriken.InitialPosition, shuriken.InitialRotation);
+        }
+
         // Update is called once per frame
         void Update () {
             if (IsFingerTouchFirstTime())

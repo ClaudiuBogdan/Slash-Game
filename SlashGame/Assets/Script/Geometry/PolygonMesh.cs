@@ -59,6 +59,7 @@ namespace Assets.Script.Geometry
                 }
                 invertedMesh.SetTriangles(triangles, m);
             }
+            invertedMesh.RecalculateNormals();
             invertedMesh.RecalculateBounds();
             return invertedMesh;
         }

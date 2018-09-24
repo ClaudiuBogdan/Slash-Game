@@ -13,6 +13,7 @@ public class SlideFigure
 
     public Polygon BigPolygon;
     public Polygon SmallPolygon;
+    public Polygon CutPolygon;
 
     public SlideFigure(Polygon polygon)
     {
@@ -91,7 +92,6 @@ public class SlideFigure
         BigPolygon = polygonA.GetArea() < polygonB.GetArea() ? polygonA : polygonB;
         SmallPolygon = BigPolygon == polygonA ? polygonB : polygonA;
 
-        SetPolygon(this.BigPolygon);
     }
 
     /**
@@ -155,5 +155,44 @@ public class SlideFigure
     {
         Point middlPoint = new Point((cutter.SecondCutPoint.x + cutter.FirstCutPoint.x)/2.0f, (cutter.SecondCutPoint.y + cutter.FirstCutPoint.y)/2.0f);
         return new Vector3(middlPoint.x, middlPoint.y, 0);
+    }
+
+    public bool IsCutValid(ArrayList ShurikenList)
+    {
+        bool isReady = true;
+        foreach (Shuriken shuriken in ShurikenList)
+        {
+            Debug.Log($"Shuriken center: {shuriken.GetShurikenCenterPosition()}");
+            if (this.BigPolygon.IsPointInsidePolygon(shuriken.GetShurikenCenterPosition()))
+            {
+                isReady = false;
+            }
+        }
+        if (isReady)
+        {
+            Debug.Log($"First Shuriken true");
+            SetPolygon(SmallPolygon);
+            CutPolygon = BigPolygon;
+            return true;
+        }
+        else
+        {
+            isReady = true;
+            foreach (Shuriken shuriken in ShurikenList)
+            {
+                if (this.SmallPolygon.IsPointInsidePolygon(shuriken.GetShurikenCenterPosition()))
+                {
+                    isReady = false;
+                }
+            }
+            if (isReady)
+            {
+                Debug.Log($"Second Shuriken true");
+                SetPolygon(BigPolygon);
+                CutPolygon = SmallPolygon;
+                return true;
+            }
+        }
+        return false;
     }
 }

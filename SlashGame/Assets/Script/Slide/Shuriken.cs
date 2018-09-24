@@ -31,5 +31,10 @@ namespace Assets.Script.Slide
             this.ShurikenGameObject = shurikenObject;
             shurikenObject.transform.position = InitialPosition;
         }
+
+        public Point GetShurikenCenterPosition()
+        {
+            return ShurikenGameObject != null ? new Point(ShurikenGameObject.transform.position.x, ShurikenGameObject.transform.position.y) : new Point(float.MaxValue, float.MaxValue) ;
+        }
     }
 }

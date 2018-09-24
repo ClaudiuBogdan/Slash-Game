@@ -15,6 +15,7 @@ namespace Assets.Script
 
         private SlideFigure MainSlideFigure;
         private ArrayList CutSlideFigureList;
+        private ArrayList ShurikenList;
         private Point firstSegmentPoint;
         private Point secondSegmentPoint;
 
@@ -69,8 +70,28 @@ namespace Assets.Script
 
         private void CreateShurikens()
         {
-            Shuriken shuriken = new Shuriken(new Point(0,0), new Vector3(1, 1, 0), MainSlideFigure.GetPoligon().GetPlaneNormal());
-            GameObject ShurikenGameObject = Instantiate(ShurikenPrefab, shuriken.InitialPosition, shuriken.InitialRotation);
+            this.ShurikenList = new ArrayList();
+
+            //+++++++++++++ Shuriken Initialization ++++++++++++++++++++++
+            Shuriken shuriken0 = new Shuriken(new Point(0,0), new Vector3(1, 1, 0), MainSlideFigure.GetPoligon().GetPlaneNormal());
+            GameObject ShurikenGameObject = Instantiate(ShurikenPrefab, shuriken0.InitialPosition, shuriken0.InitialRotation);
+            shuriken0.SetShurikenGameObject(ShurikenGameObject);
+            ShurikenList.Add(shuriken0);
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+            //+++++++++++++ Shuriken Initialization ++++++++++++++++++++++
+            Shuriken shuriken1 = new Shuriken(new Point(0, 2), new Vector3(1, 1, 0), MainSlideFigure.GetPoligon().GetPlaneNormal());
+            GameObject ShurikenGameObject1 = Instantiate(ShurikenPrefab, shuriken1.InitialPosition, shuriken1.InitialRotation);
+            shuriken1.SetShurikenGameObject(ShurikenGameObject1);
+            ShurikenList.Add(shuriken1);
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+            //+++++++++++++ Shuriken Initialization ++++++++++++++++++++++
+            Shuriken shuriken2 = new Shuriken(new Point(0, -2), new Vector3(1, 1, 0), MainSlideFigure.GetPoligon().GetPlaneNormal());
+            GameObject ShurikenGameObject2 = Instantiate(ShurikenPrefab, shuriken2.InitialPosition, shuriken2.InitialRotation);
+            shuriken2.SetShurikenGameObject(ShurikenGameObject2);
+            ShurikenList.Add(shuriken2);
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         }
 
         // Update is called once per frame
@@ -132,11 +153,15 @@ namespace Assets.Script
             if (MainSlideFigure.isReadyToCut())
             {
                 MainSlideFigure.CutFigure();
-                GameObject.Destroy(lineRendererObject); //Destroy the old gameObject figure
-                lineRendererObject = CreateSlideFigureObject(MainSlideFigure.BigPolygon); //Create a new gameObject figure with the new polygon.
-                GameObject secondFig = CreateSlideFigureObject(MainSlideFigure.SmallPolygon); 
-                CutSlideFigureList.Add(secondFig);
-                ConfigFallingFigure(secondFig);
+                if (MainSlideFigure.IsCutValid(ShurikenList))
+                {
+                    GameObject.Destroy(lineRendererObject); //Destroy the old gameObject figure
+                    lineRendererObject = CreateSlideFigureObject(MainSlideFigure.GetPoligon()); //Create a new gameObject figure with the new polygon.
+                    GameObject secondFig = CreateSlideFigureObject(MainSlideFigure.CutPolygon);
+                    CutSlideFigureList.Add(secondFig);
+                    ConfigFallingFigure(secondFig);
+                }
+                
                 CleanSlideFigure();
             }
         }

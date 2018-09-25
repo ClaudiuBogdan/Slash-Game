@@ -5,9 +5,10 @@ namespace Assets.Script.Geometry
 {
     public class GeometryUtil {
 
-        public static Vector3 CalculateVectorReflection(Vector3 reflectionBaseNormal, Vector3 vector)
+        public static Vector3 CalculateVectorReflection(Vector3 reflectionBaseVector, Vector3 reflectionNormalVector, Vector3 vector)
         {
-            return Vector3.Reflect(vector, reflectionBaseNormal);
+            float vectorProjectionMagnitude = Vector3.Dot(vector, reflectionBaseVector);
+            return vector - reflectionBaseVector.normalized * vectorProjectionMagnitude * 2;
         }
 
     }

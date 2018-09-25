@@ -42,7 +42,7 @@ namespace Assets.Script.Slide
         public void SetShurikenVelocity(Vector3 velocityVector)
         {
             this.VelocityVector = velocityVector;
-            this.ShurikenGameObject.GetComponent<Rigidbody>().velocity = Vector3.down;
+            this.ShurikenGameObject.GetComponent<Rigidbody>().velocity = velocityVector;
         }
     }
 }

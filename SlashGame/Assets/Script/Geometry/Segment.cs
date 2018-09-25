@@ -119,5 +119,10 @@ namespace Assets.Script.Geometry
         {
             return this.pointB;
         }
+
+        public Vector3 GetAsVector()
+        {
+            return new Vector3(pointB.x - pointA.x, pointB.y - pointA.y, 0);
+        }
     }
 }

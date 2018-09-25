@@ -83,6 +83,23 @@ namespace Assets.Script.Geometry
             return this.isCut;
         }
 
+        public float DistanceToPoint(Point pointP)
+        {
+            Vector3 vecV = new Vector3(this.pointB.x - this.pointA.x, this.pointB.y - this.pointA.y, 0);
+            Vector3 vecP = new Vector3(pointP.x - this.pointA.x, pointP.y - this.pointA.y, 0);
+            float dotProduct = Vector3.Dot(vecP, vecV);
+            if (Vector3.Angle(vecP, vecV) <= 90 && dotProduct <= vecV.magnitude)
+            {
+                return Vector3.Cross(vecP, vecV).magnitude;
+            }
+            else
+            {
+                float distanceToPointA = pointA.DistanceToPoint(pointP);
+                float distanceToPointB = pointB.DistanceToPoint(pointP);
+                return distanceToPointA < distanceToPointB ? distanceToPointA : distanceToPointB;
+            }
+        } 
+
         public Point GetMiddlePoint()
         {
             return new Point((pointA.x + pointB.x)/2.0f,(pointA.y + pointB.y)/ 2.0f);

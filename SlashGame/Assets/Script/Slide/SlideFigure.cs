@@ -132,7 +132,7 @@ public class SlideFigure
         return validatedPolygonVertices;
     }
 
-    public Polygon GetPoligon()
+    public Polygon GetPolygon()
     {
         return this._figurePolygon;
     }

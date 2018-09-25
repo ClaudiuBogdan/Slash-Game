@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Assets.Script.Geometry;
 using Assets.Script.Slide;
 using UnityEngine;
@@ -73,21 +74,21 @@ namespace Assets.Script
             this.ShurikenList = new ArrayList();
 
             //+++++++++++++ Shuriken Initialization ++++++++++++++++++++++
-            Shuriken shuriken0 = new Shuriken(new Point(0,0), new Vector3(1, 1, 0), MainSlideFigure.GetPoligon().GetPlaneNormal());
+            Shuriken shuriken0 = new Shuriken(new Point(0,0), new Vector3(1, 1, 0), MainSlideFigure.GetPolygon().GetPlaneNormal());
             GameObject ShurikenGameObject = Instantiate(ShurikenPrefab, shuriken0.InitialPosition, shuriken0.InitialRotation);
             shuriken0.SetShurikenGameObject(ShurikenGameObject);
             ShurikenList.Add(shuriken0);
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
             //+++++++++++++ Shuriken Initialization ++++++++++++++++++++++
-            Shuriken shuriken1 = new Shuriken(new Point(0, 2), new Vector3(1, 1, 0), MainSlideFigure.GetPoligon().GetPlaneNormal());
+            Shuriken shuriken1 = new Shuriken(new Point(0, 2), new Vector3(1, 1, 0), MainSlideFigure.GetPolygon().GetPlaneNormal());
             GameObject ShurikenGameObject1 = Instantiate(ShurikenPrefab, shuriken1.InitialPosition, shuriken1.InitialRotation);
             shuriken1.SetShurikenGameObject(ShurikenGameObject1);
             ShurikenList.Add(shuriken1);
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
             //+++++++++++++ Shuriken Initialization ++++++++++++++++++++++
-            Shuriken shuriken2 = new Shuriken(new Point(0, -2), new Vector3(1, 1, 0), MainSlideFigure.GetPoligon().GetPlaneNormal());
+            Shuriken shuriken2 = new Shuriken(new Point(0, -2), new Vector3(1, 1, 0), MainSlideFigure.GetPolygon().GetPlaneNormal());
             GameObject ShurikenGameObject2 = Instantiate(ShurikenPrefab, shuriken2.InitialPosition, shuriken2.InitialRotation);
             shuriken2.SetShurikenGameObject(ShurikenGameObject2);
             ShurikenList.Add(shuriken2);
@@ -110,6 +111,24 @@ namespace Assets.Script
                 CleanSlideFigure();
             }
             DeleteCutFigureElement();
+            DetectShurikenVelocityChange();
+        }
+
+        private void DetectShurikenVelocityChange()
+        {
+            foreach (Shuriken shuriken in ShurikenList)
+            {
+                foreach (Segment polygonSide in MainSlideFigure.GetPolygon().GetPolygonSides())
+                {
+                    if (polygonSide.DistanceToPoint(shuriken.GetShurikenCenterPosition()) < shuriken.SHURIKEN_DIMENSION)
+                    {
+                        Debug.Log($"Velocity vector changed");
+                        Vector3 reflectionPlaneNormal = Vector3.Cross(MainSlideFigure.GetPolygon().GetPlaneNormal(),shuriken.VelocityVector);
+                        Vector3 VelocityVector = GeometryUtil.CalculateVectorReflection(reflectionPlaneNormal, shuriken.VelocityVector);
+                        shuriken.SetShurikenVelocity(VelocityVector);
+                    }
+                }
+            }
         }
 
         /**
@@ -156,7 +175,7 @@ namespace Assets.Script
                 if (MainSlideFigure.IsCutValid(ShurikenList))
                 {
                     GameObject.Destroy(lineRendererObject); //Destroy the old gameObject figure
-                    lineRendererObject = CreateSlideFigureObject(MainSlideFigure.GetPoligon()); //Create a new gameObject figure with the new polygon.
+                    lineRendererObject = CreateSlideFigureObject(MainSlideFigure.GetPolygon()); //Create a new gameObject figure with the new polygon.
                     GameObject secondFig = CreateSlideFigureObject(MainSlideFigure.CutPolygon);
                     CutSlideFigureList.Add(secondFig);
                     ConfigFallingFigure(secondFig);
